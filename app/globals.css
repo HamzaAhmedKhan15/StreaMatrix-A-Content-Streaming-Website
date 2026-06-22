@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Design tokens for the app.
+  Tailwind v4 reads `--color-*` values from `@theme` and turns them into
+  utilities (e.g. `--color-surface` -> `bg-surface`, `text-surface`, ...).
+  Keeping the palette here means the whole app shares one source of truth.
+*/
+@theme {
+  /* Surfaces — a near-black base with slightly lighter raised layers */
+  --color-background: #08090c;
+  --color-surface: #0f1115;
+  --color-surface-2: #161a20;
+  --color-elevated: #1c2128;
+  --color-border: #242a33;
+
+  /* Text */
+  --color-foreground: #e8eaed;
+  --color-muted: #99a1ad;
+
+  /* Brand — the blue -> teal -> green gradient used across the app */
+  --color-brand: #22c3c9;
+  --color-brand-from: #2b8eff;
+  --color-brand-mid: #20c6c2;
+  --color-brand-to: #3de07a;
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+    /* Reusable gradient so buttons, text and bars stay perfectly in sync */
+    --gradient-brand: linear-gradient(
+      95deg,
+      var(--color-brand-from) 0%,
+      var(--color-brand-mid) 50%,
+      var(--color-brand-to) 100%
+    );
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    /* Soft brand glow anchored to the top of the page */
+    background-image: radial-gradient(
+      900px 500px at 50% -10%,
+      color-mix(in srgb, var(--color-brand) 14%, transparent),
+      transparent 70%
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  /* Consistent, accessible focus styling for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* The signature gradient as a background (buttons, chips, bars) */
+  .gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+
+  /* The signature gradient as text (logo, headings, accents) */
+  .text-gradient {
+    background-image: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* A raised card surface with a subtle border */
+  .surface-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Skeleton shimmer used by all loading placeholders */
+  .shimmer {
+    background: linear-gradient(
+      100deg,
+      var(--color-surface-2) 30%,
+      var(--color-elevated) 50%,
+      var(--color-surface-2) 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Custom loader: a brand-gradient ring with a fading tail. Spin via
+     Tailwind's `animate-spin`. Thickness stays 3px at any size. */
+  .loader-ring {
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      var(--color-brand-from) 30%,
+      var(--color-brand-mid) 60%,
+      var(--color-brand-to) 92%
+    );
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 calc(100% - 3px));
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 calc(100% - 3px));
+  }
+
+  /* Smooth entrance for lazily-revealed rails (fade + slight rise). */
+  @keyframes rail-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-rail-in {
+    animation: rail-in 0.55s ease-out both;
+    will-change: opacity, transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rail-in {
+      animation: none;
+    }
+  }
+
+  /* Hide scrollbars on horizontal carousels while keeping them scrollable */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
