@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Streamly — Browse & watch",
-    template: "%s · Streamly",
+    default: "StreamCitadel — Browse & watch",
+    template: "%s · StreamCitadel",
   },
   description:
     "A small content browser: search a catalog of titles, filter by category, and stream them with an HLS video player.",

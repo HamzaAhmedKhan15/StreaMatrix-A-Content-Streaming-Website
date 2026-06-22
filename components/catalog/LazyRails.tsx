@@ -11,19 +11,22 @@ const INITIAL = 3;
 
 /**
  * Renders the home rails progressively. The first 3 show immediately; after
- * that a loader sits at the bottom and each rail is revealed — one per scroll —
- * as the loader scrolls into view, fading in smoothly.
+ * that a loader sits at the bottom and reveals more rails as it scrolls into
+ * view, each fading in smoothly.
  */
 export function LazyRails({ rails }: { rails: Rail[] }) {
   const [visibleCount, setVisibleCount] = useState(Math.min(INITIAL, rails.length));
   const sentinelRef = useRef<HTMLDivElement>(null);
-  // True between revealing a rail and the loader leaving view again, so each
-  // scroll-to-bottom reveals exactly one rail.
-  const revealingRef = useRef(false);
 
   const total = rails.length;
   const hasMore = visibleCount < total;
 
+  // Re-creating the observer whenever `visibleCount` changes is what makes this
+  // reliable: a fresh IntersectionObserver always reports the sentinel's
+  // *current* position on its next callback. So if the loader is still in view
+  // after a rail appears (a short rail, or a tall viewport), it simply reveals
+  // the next one too — instead of getting stuck waiting for a scroll event that
+  // never comes, which was the old one-reveal-per-scroll bug.
   useEffect(() => {
     if (!hasMore) return;
     const sentinel = sentinelRef.current;
@@ -31,26 +34,17 @@ export function LazyRails({ rails }: { rails: Rail[] }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-
-        if (entry.isIntersecting) {
-          if (!revealingRef.current) {
-            revealingRef.current = true;
-            setVisibleCount((count) => Math.min(count + 1, total));
-          }
-        } else {
-          // Loader scrolled out of view (pushed down by the new rail) — ready
-          // to reveal the next one on the following scroll.
-          revealingRef.current = false;
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((count) => Math.min(count + 1, total));
         }
       },
-      { rootMargin: "0px" },
+      // Start loading a bit before the loader is fully on screen.
+      { rootMargin: "300px 0px" },
     );
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore, total]);
+  }, [hasMore, total, visibleCount]);
 
   return (
     <div className="space-y-10">

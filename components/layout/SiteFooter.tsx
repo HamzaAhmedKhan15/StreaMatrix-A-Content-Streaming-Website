@@ -43,7 +43,7 @@ export function SiteFooter() {
                 <FilmIcon className="size-5" />
               </span>
               <span className="text-lg font-bold tracking-tight">
-                <span className="text-gradient">Stream</span>ly
+                <span className="text-gradient">Stream</span>Citadel
               </span>
             </Link>
             <p className="text-sm text-muted">
@@ -73,7 +73,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-border/60 pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Streamly — Stream more, search less.</p>
+          <p>© {year} StreamCitadel — Stream more, search less.</p>
           <p>
             Crafted by <span className="text-gradient font-semibold">Hamza Ahmed Khan</span>
           </p>

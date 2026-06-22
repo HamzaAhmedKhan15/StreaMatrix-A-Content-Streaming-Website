@@ -23,13 +23,13 @@ export function SiteHeader({ onToggleSidebar }: { onToggleSidebar: () => void })
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2.5"
-          aria-label="Streamly — home"
+          aria-label="StreamCitadel — home"
         >
           <span className="grid size-9 place-items-center rounded-xl gradient-brand text-black">
             <FilmIcon className="size-5" />
           </span>
           <span className="hidden text-lg font-bold tracking-tight sm:block">
-            <span className="text-gradient">Stream</span>ly
+            <span className="text-gradient">Stream</span>Citadel
           </span>
         </Link>
 

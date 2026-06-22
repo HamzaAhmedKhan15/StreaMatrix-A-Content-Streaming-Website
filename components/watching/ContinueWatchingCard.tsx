@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { WatchProgress } from "@/lib/continueWatching";
+import { SmoothImage } from "@/components/ui/SmoothImage";
 import { CloseIcon, PlayIcon } from "@/components/ui/icons";
 
 /** Landscape card with a progress bar, used in the Continue watching row. */
@@ -20,7 +20,7 @@ export function ContinueWatchingCard({
     <div className="group relative">
       <Link href={`/title/${item.id}`} className="block overflow-hidden rounded-xl surface-card">
         <div className="relative aspect-video">
-          <Image
+          <SmoothImage
             src={item.thumbnailUrl}
             alt={`${item.name} thumbnail`}
             fill

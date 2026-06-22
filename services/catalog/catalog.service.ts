@@ -1,4 +1,5 @@
-import { CATALOG } from "./data";
+import { fetchTrailerKey } from "@/lib/tmdb";
+import { loadCatalog } from "./data";
 import { filterTitles, sortTitles } from "./filter";
 import {
   CATEGORIES,
@@ -21,38 +22,47 @@ import {
 export const catalogService = {
   /** List titles matching a search/category/type/sort query. */
   async query(query: CatalogQuery = {}): Promise<Title[]> {
-    return filterTitles(CATALOG, query);
+    return filterTitles(await loadCatalog(), query);
   },
 
   /** Fetch a single title by id, or `null` if it does not exist. */
   async getById(id: string): Promise<Title | null> {
-    return CATALOG.find((title) => title.id === id) ?? null;
+    const catalog = await loadCatalog();
+    return catalog.find((title) => title.id === id) ?? null;
+  },
+
+  /** The YouTube key of a title's trailer, or `null` if none is available. */
+  async getTrailerKey(id: string): Promise<string | null> {
+    return fetchTrailerKey(id);
   },
 
   /** Ids of every title — handy for static generation of detail pages. */
   async getAllIds(): Promise<string[]> {
-    return CATALOG.map((title) => title.id);
+    const catalog = await loadCatalog();
+    return catalog.map((title) => title.id);
   },
 
   /** The categories that actually have content, for the filter UI. */
   async getCategories(): Promise<Category[]> {
-    const present = new Set(CATALOG.map((title) => title.category));
+    const catalog = await loadCatalog();
+    const present = new Set(catalog.map((title) => title.category));
     return CATEGORIES.filter((category) => present.has(category));
   },
 
   /** Other titles in the same category, excluding the given one. */
   async getRelated(id: string, limit = 8): Promise<Title[]> {
-    const title = CATALOG.find((entry) => entry.id === id);
+    const catalog = await loadCatalog();
+    const title = catalog.find((entry) => entry.id === id);
     if (!title) return [];
-    return CATALOG.filter((entry) => entry.id !== id && entry.category === title.category).slice(
-      0,
-      limit,
-    );
+    return catalog
+      .filter((entry) => entry.id !== id && entry.category === title.category)
+      .slice(0, limit);
   },
 
   /** The single hero title shown at the top of the home page. */
   async getFeatured(): Promise<Title | null> {
-    return CATALOG.find((title) => title.featured) ?? CATALOG[0] ?? null;
+    const catalog = await loadCatalog();
+    return catalog.find((title) => title.featured) ?? catalog[0] ?? null;
   },
 
   /**
@@ -60,18 +70,19 @@ export const catalogService = {
    * slice of the catalog, so titles can appear in more than one rail.
    */
   async getRails(): Promise<Rail[]> {
-    const byCategory = (category: Category) => CATALOG.filter((t) => t.category === category);
-    const byType = (type: MediaType) => CATALOG.filter((t) => t.type === type);
+    const catalog = await loadCatalog();
+    const byCategory = (category: Category) => catalog.filter((t) => t.category === category);
+    const byType = (type: MediaType) => catalog.filter((t) => t.type === type);
 
     const rails: Rail[] = [
-      { id: "trending", title: "🔥 Trending Now", titles: sortTitles(CATALOG, "trending").slice(0, 12) },
+      { id: "trending", title: "🔥 Trending Now", titles: sortTitles(catalog, "trending").slice(0, 12) },
       { id: "movies", title: "Hollywood", titles: byType("movie") },
       { id: "animated", title: "Animated", titles: byCategory("Animation") },
       { id: "series", title: "Television Series", titles: byType("series") },
       {
         id: "acclaimed",
         title: "Critically Acclaimed",
-        titles: sortTitles(CATALOG.filter((t) => t.rating >= 8.3), "rating"),
+        titles: sortTitles(catalog.filter((t) => t.rating >= 8.3), "rating"),
       },
       { id: "sci-fi", title: "Sci-Fi & Beyond", titles: byCategory("Sci-Fi") },
       { id: "action", title: "Action & Adventure", titles: byCategory("Action") },

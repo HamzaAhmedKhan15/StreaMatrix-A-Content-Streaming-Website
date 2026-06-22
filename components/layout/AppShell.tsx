@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { SiteHeader } from "./SiteHeader";
 import { Sidebar } from "./Sidebar";
 import { SiteFooter } from "./SiteFooter";
+import { BackToTop } from "./BackToTop";
 
 /**
  * Client shell that owns the sidebar state and lays out the app.
@@ -31,6 +32,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex-1">{children}</main>
         <SiteFooter />
       </div>
+
+      <BackToTop />
     </div>
   );
 }

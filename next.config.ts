@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     // for lazy-loading and layout stability.
     unoptimized: true,
   },
+  // Hide the on-screen Next.js dev indicator badge (bottom-left in dev).
+  devIndicators: false,
 };
 
 export default nextConfig;

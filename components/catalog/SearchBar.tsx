@@ -1,19 +1,23 @@
 "use client";
 
 import { SearchIcon, CloseIcon } from "@/components/ui/icons";
+import { BarsLoader } from "@/components/ui/BarsLoader";
 
 /**
  * Controlled search input. Laid out with flexbox (icon · input · clear) so the
  * placeholder can never overlap the icon. Presentational only — the parent owns
- * the value, which keeps this reusable.
+ * the value, which keeps this reusable. When `loading` is set, the leading icon
+ * is swapped for an animated three-bar "searching" indicator.
  */
 export function SearchBar({
   value,
   onChange,
+  loading = false,
   placeholder = "Search movies, series, genres…",
 }: {
   value: string;
   onChange: (value: string) => void;
+  loading?: boolean;
   placeholder?: string;
 }) {
   return (
@@ -31,6 +35,8 @@ export function SearchBar({
         placeholder={placeholder}
         className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted"
       />
+      {/* Searching indicator sits at the right, just after the typed text */}
+      {loading && <BarsLoader className="shrink-0" />}
       {value && (
         <button
           type="button"

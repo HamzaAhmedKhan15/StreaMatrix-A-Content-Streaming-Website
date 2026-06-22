@@ -1,14 +1,19 @@
 import { backdropArt, posterArt } from "@/lib/artwork";
+import { fetchTmdbCatalog } from "@/lib/tmdb";
 import type { MediaType } from "./types";
 import type { Title } from "./types";
 
 /**
- * In-memory catalog — the "database" behind the catalog service.
+ * Catalog data source.
  *
- * Using local mock data keeps the app self-contained: no API keys, no rate
- * limits, and it works offline and in CI. Because everything goes through the
- * service layer, this module could later be swapped for a real database or a
- * TMDB client without touching any UI code.
+ * `loadCatalog()` is the single entrypoint the service uses. It fetches real
+ * titles + artwork from TMDB (see `lib/tmdb.ts`) and falls back to the bundled
+ * `FALLBACK_CATALOG` below when no API key is configured or the request fails —
+ * so the app still builds, runs offline, and passes CI without a network.
+ *
+ * The result is memoised at module scope so the dataset is fetched once per
+ * server process and stays consistent across `generateStaticParams`, detail
+ * pages, and the API routes.
  */
 
 // A handful of well-known, reliable public HLS test streams. Each title points
@@ -36,7 +41,7 @@ function build({ stream, ...rest }: Seed): Title {
 const movie: MediaType = "movie";
 const series: MediaType = "series";
 
-export const CATALOG: Title[] = [
+const FALLBACK_CATALOG: Title[] = [
   build({ id: "neon-horizon", name: "Neon Horizon", type: movie, category: "Sci-Fi", genres: ["Sci-Fi", "Adventure", "Mystery"], year: 2024, rating: 8.7, maturity: "PG-13", durationMinutes: 138, synopsis: "A deep-space salvage crew intercepts a decades-old distress signal and uncovers a secret that rewrites humanity's map of the galaxy.", cast: ["Mara Quinn", "Devon Aoki", "Idris Calloway"], stream: "bunny", featured: true }),
   build({ id: "the-last-signal", name: "The Last Signal", type: movie, category: "Thriller", genres: ["Thriller", "Mystery"], year: 2023, rating: 8.1, maturity: "R", durationMinutes: 121, synopsis: "A night-shift radio operator hears a broadcast that hasn't aired in forty years — and someone will do anything to keep it off the air.", cast: ["Helena Cross", "Marcus Webb"], stream: "tears" }),
   build({ id: "iron-veil", name: "Iron Veil", type: movie, category: "Action", genres: ["Action", "Spy"], year: 2024, rating: 7.9, maturity: "PG-13", durationMinutes: 109, synopsis: "A retired operative is pulled back in for one last extraction when the agency she built turns against its own.", cast: ["Nadia Rourke", "Theo Vance"], stream: "bipbop" }),
@@ -71,3 +76,22 @@ export const CATALOG: Title[] = [
   build({ id: "coastal-lines", name: "Coastal Lines", type: series, category: "Drama", genres: ["Drama", "Family"], year: 2021, rating: 7.9, maturity: "TV-14", durationMinutes: 44, synopsis: "Three generations of a fishing family weather every storm the sea — and each other — can throw at them.", cast: ["Maeve Sullivan", "Tom Sullivan"], stream: "bunny" }),
   build({ id: "quantum-detectives", name: "Quantum Detectives", type: series, category: "Sci-Fi", genres: ["Sci-Fi", "Mystery"], year: 2023, rating: 8.0, maturity: "TV-14", durationMinutes: 46, synopsis: "Two investigators solve crimes that haven't fully happened yet, in a city where every choice splits the world.", cast: ["Inspector Vega", "Dr. Lune"], stream: "tears" }),
 ];
+
+/** Memoised dataset promise — see the file header. */
+let catalogPromise: Promise<Title[]> | null = null;
+
+async function buildCatalog(): Promise<Title[]> {
+  try {
+    const fromTmdb = await fetchTmdbCatalog();
+    if (fromTmdb.length > 0) return fromTmdb;
+  } catch (error) {
+    console.error("[catalog] TMDB fetch failed — falling back to bundled data:", error);
+  }
+  return FALLBACK_CATALOG;
+}
+
+/** The catalog the app reads from. Fetched once, then cached for the process. */
+export function loadCatalog(): Promise<Title[]> {
+  if (!catalogPromise) catalogPromise = buildCatalog();
+  return catalogPromise;
+}

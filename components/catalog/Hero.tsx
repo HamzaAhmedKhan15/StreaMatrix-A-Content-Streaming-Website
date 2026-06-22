@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Title } from "@/services/catalog";
+import { SmoothImage } from "@/components/ui/SmoothImage";
 import { buttonStyles } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Rating } from "@/components/ui/Rating";
@@ -20,7 +20,7 @@ export function Hero({ title }: { title: Title }) {
     <section className="relative overflow-hidden rounded-3xl border border-border">
       {/* Backdrop fills the section, which is sized by its content */}
       <div className="absolute inset-0">
-        <Image src={title.backdropUrl} alt="" fill priority sizes="100vw" className="object-cover" />
+        <SmoothImage src={title.backdropUrl} alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-linear-to-t from-background via-background/70 to-background/10" />
         <div className="absolute inset-0 bg-linear-to-r from-background/90 via-background/40 to-transparent" />
       </div>

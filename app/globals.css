@@ -140,6 +140,32 @@
     }
   }
 
+  /* Three vertical bars that pulse like an equalizer — used as a "searching"
+     indicator. Each bar gets a staggered `animation-delay` from the markup. */
+  .bars-loader-bar {
+    width: 2px;
+    height: 15px;
+    border-radius: 9999px;
+    background-color: var(--color-brand);
+    /* Anchor at the bottom so each bar visibly grows upward. */
+    transform-origin: bottom;
+    animation: bars 1s ease-in-out infinite;
+  }
+  @keyframes bars {
+    0%,
+    100% {
+      transform: scaleY(0.25);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bars-loader-bar {
+      animation: none;
+    }
+  }
+
   /* Hide scrollbars on horizontal carousels while keeping them scrollable */
   .no-scrollbar {
     -ms-overflow-style: none;

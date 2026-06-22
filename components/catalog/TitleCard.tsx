@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Title } from "@/services/catalog";
+import { SmoothImage } from "@/components/ui/SmoothImage";
 import { Badge } from "@/components/ui/Badge";
 import { Rating } from "@/components/ui/Rating";
 import { PlayIcon } from "@/components/ui/icons";
@@ -18,7 +18,7 @@ export function TitleCard({ title, priority = false }: { title: Title; priority?
     >
       <article className="overflow-hidden rounded-xl surface-card transition-all duration-300 group-hover:-translate-y-1 group-hover:border-foreground/25 group-focus-visible:-translate-y-1 group-focus-visible:border-brand">
         <div className="relative aspect-2/3 overflow-hidden">
-          <Image
+          <SmoothImage
             src={title.posterUrl}
             alt={`${title.name} poster`}
             fill

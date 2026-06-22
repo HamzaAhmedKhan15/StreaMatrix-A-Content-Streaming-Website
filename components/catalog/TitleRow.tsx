@@ -1,3 +1,5 @@
+/** @format */
+
 import type { Title } from "@/services/catalog";
 import { TitleCard } from "./TitleCard";
 

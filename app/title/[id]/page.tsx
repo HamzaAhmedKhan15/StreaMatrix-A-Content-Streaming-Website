@@ -44,7 +44,10 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
   // Unknown id -> render the title-level not-found.tsx (404).
   if (!title) notFound();
 
-  const related = await catalogService.getRelated(id);
+  const [related, trailerKey] = await Promise.all([
+    catalogService.getRelated(id),
+    catalogService.getTrailerKey(id),
+  ]);
 
   return (
     <article className="mx-auto max-w-5xl space-y-8 px-4 py-6 sm:px-6 sm:py-8">
@@ -56,8 +59,8 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
         Back to browse
       </Link>
 
-      {/* HLS player with resume + progress tracking */}
-      <TitlePlayer title={title} />
+      {/* Trailer (YouTube) when available, else HLS stream — with resume tracking */}
+      <TitlePlayer title={title} trailerKey={trailerKey} />
 
       <header className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
