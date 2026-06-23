@@ -8,24 +8,12 @@ StreaMatrix is a small streaming web app. You can browse a catalog of
 movies and series, search and filter them, open a title's own page, and
 play a video. It's built with Next.js and TypeScript.
 
-The goal was to keep it small but polished, and to keep the code tidy so
+The goal was to keep it small but polished, and to keep the code logic simple so
 every part is easy to explain.
 
 
-HOW TO RUN IT
--------------
-  npm install
-  npm run dev      ->  start the dev server at http://localhost:3000
-  npm run build    ->  production build (also type-checks the whole app)
-  npm start        ->  serve the production build
-  npm test         ->  run the unit tests
-  npm run lint     ->  run the linter
-
-Node 20 or newer is recommended.
-
-
 ==============================================================
- WHAT THE TEST ASKED FOR (and where it lives)
+ PRACTICAL TEST REQUIREMENTS: 
 ==============================================================
 
 These are the required features from the brief. Everything here is done.
@@ -51,10 +39,10 @@ These are the required features from the brief. Everything here is done.
 
 5. A working video player that plays an HLS (.m3u8) stream.
    - Uses hls.js for most browsers, and the browser's own HLS support on
-     Safari/iOS (so we don't ship extra code there).
+     Safari/iOS (so we don't need extra code there).
    - See components/player/VideoPlayer.tsx.
 
-6. Sensible loading and error states.
+6. Lazy loading and error states.
    - Skeletons while pages load, a spinner while search runs, an empty
      state when nothing matches, 404 pages for unknown titles, and an
      error boundary if something throws.
@@ -89,16 +77,16 @@ These are the required features from the brief. Everything here is done.
 
 
 ==============================================================
- MY OWN EXTRAS (beyond the brief)
+ MY OWN EXTRAS 
 ==============================================================
 
-These two were not asked for. I added them to round the app out.
+These two were not asked for. I added them to make the app look professional.
 
 1) SUBSCRIPTION / PRICING PAGE
    - Route: /subscribe
    - A simple "pick a plan" page with three tiers: Basic, Standard and
      Premium. The middle plan is highlighted as the popular one.
-   - It's a demo only, so no payment is taken and the buttons don't
+   - It's a view only, so no payment is taken and the buttons don't
      charge anything.
    - Files: app/subscribe/page.tsx and
      components/subscriptions/Plans.tsx.

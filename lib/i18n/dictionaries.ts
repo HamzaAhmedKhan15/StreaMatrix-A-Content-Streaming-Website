@@ -1,3 +1,5 @@
+/** @format */
+
 import type { Locale } from "./config";
 
 /**
@@ -75,11 +77,11 @@ const en = {
   "detail.castLabel": "Cast:",
   "detail.moreLikeThis": "More like this",
 
-  "title.play": "Play now",
+  "title.play": "Watch now",
   "title.moreInfo": "More info",
   "hero.featured": "Featured",
 
-  "backToTop": "Back to top",
+  backToTop: "Back to top",
 
   "player.loadingStream": "Loading stream…",
   "player.loadingTrailer": "Loading trailer…",
@@ -175,7 +177,7 @@ const ar: Dictionary = {
   "title.moreInfo": "مزيد من المعلومات",
   "hero.featured": "مميز",
 
-  "backToTop": "العودة إلى الأعلى",
+  backToTop: "العودة إلى الأعلى",
 
   "player.loadingStream": "جارٍ تحميل البث…",
   "player.loadingTrailer": "جارٍ تحميل المقطع الدعائي…",
@@ -268,7 +270,7 @@ const fr: Dictionary = {
   "title.moreInfo": "Plus d’infos",
   "hero.featured": "À la une",
 
-  "backToTop": "Retour en haut",
+  backToTop: "Retour en haut",
 
   "player.loadingStream": "Chargement du flux…",
   "player.loadingTrailer": "Chargement de la bande-annonce…",
@@ -361,7 +363,7 @@ const ur: Dictionary = {
   "title.moreInfo": "مزید معلومات",
   "hero.featured": "نمایاں",
 
-  "backToTop": "اوپر جائیں",
+  backToTop: "اوپر جائیں",
 
   "player.loadingStream": "اسٹریم لوڈ ہو رہی ہے…",
   "player.loadingTrailer": "ٹریلر لوڈ ہو رہا ہے…",
@@ -454,7 +456,7 @@ const zh: Dictionary = {
   "title.moreInfo": "更多信息",
   "hero.featured": "精选",
 
-  "backToTop": "返回顶部",
+  backToTop: "返回顶部",
 
   "player.loadingStream": "正在加载视频…",
   "player.loadingTrailer": "正在加载预告片…",
