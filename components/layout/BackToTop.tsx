@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/lib/i18n/I18nProvider";
 import { ChevronUpIcon } from "@/components/ui/icons";
 
 /**
@@ -14,6 +15,7 @@ import { ChevronUpIcon } from "@/components/ui/icons";
  */
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const update = () => {
@@ -66,11 +68,11 @@ export function BackToTop() {
     <button
       type="button"
       onClick={scrollToTop}
-      aria-label="Back to top"
+      aria-label={t("backToTop")}
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
       className={cn(
-        "fixed bottom-20 right-4 z-40 grid cursor-pointer place-items-center rounded-full text-black shadow-lg",
+        "fixed bottom-16 right-4 z-40 grid cursor-pointer place-items-center rounded-full text-black shadow-lg",
         "size-11 gradient-brand sm:bottom-24 sm:right-6 sm:size-12",
         "transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-xl",
         visible ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",

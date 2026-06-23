@@ -1,4 +1,4 @@
-# StreamCitadel — a small video streaming content browser
+# StreaMatrix — a small video streaming content browser
 
 Browse a catalog of movies and series, search and filter them, open a title's
 detail page, and play an HLS video stream. Built with **Next.js 16** (App

@@ -9,3 +9,4 @@ export { catalogService } from "./catalog.service";
 export { filterTitles, sortTitles } from "./filter";
 export { CATEGORIES } from "./types";
 export type { Category, CatalogQuery, MediaType, Rail, SortOption, Title } from "./types";
+export type { CastMember } from "@/lib/tmdb";

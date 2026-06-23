@@ -7,6 +7,7 @@ import type HlsInstance from "hls.js";
 import { Spinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { AlertIcon } from "@/components/ui/icons";
+import { useI18n } from "@/lib/i18n/I18nProvider";
 
 type Status = "loading" | "ready" | "error";
 
@@ -48,6 +49,7 @@ export function VideoPlayer({
   const [status, setStatus] = useState<Status>("loading");
   // Bumping this re-runs the setup effect, which is how "Retry" works.
   const [attempt, setAttempt] = useState(0);
+  const { t } = useI18n();
 
   // Keep the latest callbacks in refs so the playback listeners don't need to
   // re-subscribe whenever the parent passes new function identities.
@@ -159,14 +161,14 @@ export function VideoPlayer({
         playsInline
         preload="metadata"
         className="size-full"
-        aria-label={title ? `Video player: ${title}` : "Video player"}
+        aria-label={title ? `${title}` : "Video player"}
       />
 
       {status === "loading" && (
         <div className="absolute inset-0 grid place-items-center bg-black/70">
           <div className="flex flex-col items-center gap-3">
             <Spinner className="size-10" />
-            <p className="text-sm text-muted">Loading stream…</p>
+            <p className="text-sm text-muted">{t("player.loadingStream")}</p>
           </div>
         </div>
       )}
@@ -176,13 +178,11 @@ export function VideoPlayer({
           <div className="flex max-w-sm flex-col items-center gap-3">
             <AlertIcon className="size-9 text-red-400" />
             <div className="space-y-1">
-              <p className="font-semibold">This stream couldn’t be played</p>
-              <p className="text-sm text-muted">
-                The video source may be temporarily unavailable.
-              </p>
+              <p className="font-semibold">{t("player.streamErrorTitle")}</p>
+              <p className="text-sm text-muted">{t("player.streamErrorBody")}</p>
             </div>
             <Button variant="secondary" size="sm" onClick={() => setAttempt((n) => n + 1)}>
-              Try again
+              {t("player.tryAgain")}
             </Button>
           </div>
         </div>

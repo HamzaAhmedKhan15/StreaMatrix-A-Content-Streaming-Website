@@ -58,6 +58,14 @@ export interface CatalogQuery {
   category?: string;
   /** Media type to filter by ("movie" | "series"). */
   type?: MediaType;
+  /**
+   * Genre to filter by — matched against a title's primary category *and* its
+   * `genres` list, so "Comedy" finds both Comedy-categorised titles and titles
+   * that merely list Comedy among their genres. `undefined`/"all" means none.
+   */
+  genre?: string;
+  /** Release year to filter by. `undefined` means no year filter. */
+  year?: number;
   sort?: SortOption;
 }
 

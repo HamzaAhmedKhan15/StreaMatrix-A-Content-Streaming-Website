@@ -34,12 +34,5 @@ export function HeaderSearch() {
     }, 300);
   };
 
-  return (
-    <SearchBar
-      value={value}
-      onChange={handleChange}
-      loading={debouncing || isPending}
-      placeholder="Search movies, series, genres…"
-    />
-  );
+  return <SearchBar value={value} onChange={handleChange} loading={debouncing || isPending} />;
 }

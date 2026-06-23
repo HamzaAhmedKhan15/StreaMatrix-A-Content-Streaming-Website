@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { catalogService } from "@/services/catalog";
 import { TitlePlayer } from "@/components/player/TitlePlayer";
 import { TitleRow } from "@/components/catalog/TitleRow";
+import { CastRow } from "@/components/catalog/CastRow";
 import { Badge } from "@/components/ui/Badge";
 import { Rating } from "@/components/ui/Rating";
 import { ChevronLeftIcon } from "@/components/ui/icons";
 import { formatRuntime } from "@/lib/format";
+import { getTranslator } from "@/lib/i18n/server";
 
 type DetailPageProps = { params: Promise<{ id: string }> };
 
@@ -44,9 +46,11 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
   // Unknown id -> render the title-level not-found.tsx (404).
   if (!title) notFound();
 
-  const [related, trailerKey] = await Promise.all([
+  const [related, trailerKey, cast, { t }] = await Promise.all([
     catalogService.getRelated(id),
     catalogService.getTrailerKey(id),
+    catalogService.getCast(id),
+    getTranslator(),
   ]);
 
   return (
@@ -56,7 +60,7 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
         className="inline-flex items-center gap-1 text-sm text-muted transition-colors hover:text-foreground"
       >
         <ChevronLeftIcon className="size-4" />
-        Back to browse
+        {t("detail.back")}
       </Link>
 
       {/* Trailer (YouTube) when available, else HLS stream — with resume tracking */}
@@ -83,12 +87,14 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
 
         {title.cast.length > 0 && (
           <p className="text-sm text-muted">
-            <span className="text-foreground">Cast:</span> {title.cast.join(", ")}
+            <span className="text-foreground">{t("detail.castLabel")}</span> {title.cast.join(", ")}
           </p>
         )}
       </header>
 
-      <TitleRow heading="More like this" titles={related} />
+      <CastRow cast={cast} />
+
+      <TitleRow heading={t("detail.moreLikeThis")} titles={related} />
     </article>
   );
 }

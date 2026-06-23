@@ -1,6 +1,7 @@
 "use client";
 
 import { useContinueWatching } from "@/hooks/useContinueWatching";
+import { useI18n } from "@/lib/i18n/I18nProvider";
 import { ContinueWatchingCard } from "./ContinueWatchingCard";
 
 /**
@@ -9,13 +10,14 @@ import { ContinueWatchingCard } from "./ContinueWatchingCard";
  */
 export function ContinueWatchingRow() {
   const { items, remove } = useContinueWatching();
+  const { t } = useI18n();
 
   // Empty during SSR / first paint (server snapshot), then fills after hydration.
   if (items.length === 0) return null;
 
   return (
-    <section className="space-y-3" aria-label="Continue watching">
-      <h2 className="text-xl font-semibold">Continue watching</h2>
+    <section className="space-y-3" aria-label={t("continue.heading")}>
+      <h2 className="text-xl font-semibold">{t("continue.heading")}</h2>
       <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 sm:gap-4">
         {items.map((item) => (
           <div key={item.id} className="w-44 shrink-0 sm:w-52">

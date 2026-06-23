@@ -72,6 +72,35 @@ describe("filterTitles", () => {
     ]);
   });
 
+  it("filters by genre matching the primary category", () => {
+    expect(
+      filterTitles(titles, { genre: "Sci-Fi" })
+        .map((t) => t.id)
+        .sort(),
+    ).toEqual(["a", "d"]);
+  });
+
+  it("filters by genre matching the genres list", () => {
+    // 'Drama' is c's category and also appears in d's genres list.
+    expect(
+      filterTitles(titles, { genre: "Drama" })
+        .map((t) => t.id)
+        .sort(),
+    ).toEqual(["c", "d"]);
+  });
+
+  it("filters by year", () => {
+    expect(filterTitles(titles, { year: 2024 }).map((t) => t.id)).toEqual(["a"]);
+  });
+
+  it("treats genre 'all' as no filter", () => {
+    expect(filterTitles(titles, { genre: "all" })).toHaveLength(4);
+  });
+
+  it("combines genre and year", () => {
+    expect(filterTitles(titles, { genre: "Sci-Fi", year: 2021 }).map((t) => t.id)).toEqual(["d"]);
+  });
+
   it("returns an empty array when nothing matches", () => {
     expect(filterTitles(titles, { search: "zzzz" })).toEqual([]);
   });

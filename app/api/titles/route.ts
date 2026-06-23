@@ -4,7 +4,7 @@ const VALID_SORTS: SortOption[] = ["trending", "rating", "year", "name"];
 const VALID_TYPES: MediaType[] = ["movie", "series"];
 
 /**
- * GET /api/titles?search=&category=&sort=
+ * GET /api/titles?search=&category=&type=&genre=&year=&sort=
  *
  * The catalog service exposed as a small REST endpoint. Server Components call
  * the service directly (faster, no self-fetch), but publishing it as HTTP keeps
@@ -20,10 +20,15 @@ export async function GET(request: Request) {
   const typeParam = searchParams.get("type");
   const type = VALID_TYPES.find((option) => option === typeParam);
 
+  const yearParam = searchParams.get("year");
+  const year = yearParam && /^\d{4}$/.test(yearParam) ? Number(yearParam) : undefined;
+
   const results = await catalogService.query({
     search: searchParams.get("search") ?? undefined,
     category: searchParams.get("category") ?? undefined,
     type,
+    genre: searchParams.get("genre") ?? undefined,
+    year,
     sort,
   });
 

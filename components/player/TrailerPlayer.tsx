@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Spinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { AlertIcon } from "@/components/ui/icons";
+import { useI18n } from "@/lib/i18n/I18nProvider";
 import type { PlaybackProgress } from "./VideoPlayer";
 
 type Status = "loading" | "ready" | "error";
@@ -95,6 +96,7 @@ export function TrailerPlayer({
   const [status, setStatus] = useState<Status>("loading");
   // Bumping this re-runs the setup effect, which is how "Retry" works.
   const [attempt, setAttempt] = useState(0);
+  const { t } = useI18n();
 
   const onProgressRef = useRef(onProgress);
   const onEndedRef = useRef(onEnded);
@@ -178,14 +180,14 @@ export function TrailerPlayer({
       <div
         ref={wrapRef}
         className="size-full [&>iframe]:size-full"
-        aria-label={title ? `Trailer: ${title}` : "Trailer"}
+        aria-label={title ? `${title}` : "Trailer"}
       />
 
       {status === "loading" && (
         <div className="absolute inset-0 grid place-items-center bg-black/70">
           <div className="flex flex-col items-center gap-3">
             <Spinner className="size-10" />
-            <p className="text-sm text-muted">Loading trailer…</p>
+            <p className="text-sm text-muted">{t("player.loadingTrailer")}</p>
           </div>
         </div>
       )}
@@ -195,11 +197,11 @@ export function TrailerPlayer({
           <div className="flex max-w-sm flex-col items-center gap-3">
             <AlertIcon className="size-9 text-red-400" />
             <div className="space-y-1">
-              <p className="font-semibold">This trailer couldn’t be played</p>
-              <p className="text-sm text-muted">The trailer may be unavailable in your region.</p>
+              <p className="font-semibold">{t("player.trailerErrorTitle")}</p>
+              <p className="text-sm text-muted">{t("player.trailerErrorBody")}</p>
             </div>
             <Button variant="secondary" size="sm" onClick={() => setAttempt((n) => n + 1)}>
-              Try again
+              {t("player.tryAgain")}
             </Button>
           </div>
         </div>

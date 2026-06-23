@@ -28,23 +28,35 @@ export function sortTitles(titles: Title[], sort: SortOption = "trending"): Titl
   }
 }
 
-/** Filter titles by free-text search, category and type, then sort the result. */
+/**
+ * Filter titles by free-text search, category, type, genre and year, then sort
+ * the result. Every supplied criterion must match (logical AND), so the filter
+ * bar can stack e.g. genre + year to narrow the catalog down progressively.
+ */
 export function filterTitles(titles: Title[], query: CatalogQuery = {}): Title[] {
   const search = query.search?.trim().toLowerCase() ?? "";
   const category =
     query.category && query.category.toLowerCase() !== "all" ? query.category.toLowerCase() : null;
   const type = query.type ?? null;
+  const genre =
+    query.genre && query.genre.toLowerCase() !== "all" ? query.genre.toLowerCase() : null;
+  const year = query.year ?? null;
 
   const matched = titles.filter((title) => {
     const matchesSearch =
       !search ||
       title.name.toLowerCase().includes(search) ||
-      title.genres.some((genre) => genre.toLowerCase().includes(search));
+      title.genres.some((g) => g.toLowerCase().includes(search));
 
     const matchesCategory = !category || title.category.toLowerCase() === category;
     const matchesType = !type || title.type === type;
+    const matchesGenre =
+      !genre ||
+      title.category.toLowerCase() === genre ||
+      title.genres.some((g) => g.toLowerCase() === genre);
+    const matchesYear = !year || title.year === year;
 
-    return matchesSearch && matchesCategory && matchesType;
+    return matchesSearch && matchesCategory && matchesType && matchesGenre && matchesYear;
   });
 
   return sortTitles(matched, query.sort);

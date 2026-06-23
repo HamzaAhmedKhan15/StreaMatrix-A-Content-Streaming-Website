@@ -1,4 +1,4 @@
-import { fetchTrailerKey } from "@/lib/tmdb";
+import { fetchCast, fetchTrailerKey } from "@/lib/tmdb";
 import { loadCatalog } from "./data";
 import { filterTitles, sortTitles } from "./filter";
 import {
@@ -36,6 +36,11 @@ export const catalogService = {
     return fetchTrailerKey(id);
   },
 
+  /** Top-billed cast for a title (empty if unavailable). */
+  async getCast(id: string) {
+    return fetchCast(id);
+  },
+
   /** Ids of every title — handy for static generation of detail pages. */
   async getAllIds(): Promise<string[]> {
     const catalog = await loadCatalog();
@@ -47,6 +52,12 @@ export const catalogService = {
     const catalog = await loadCatalog();
     const present = new Set(catalog.map((title) => title.category));
     return CATEGORIES.filter((category) => present.has(category));
+  },
+
+  /** The distinct release years present in the catalog, newest first. */
+  async getYears(): Promise<number[]> {
+    const catalog = await loadCatalog();
+    return [...new Set(catalog.map((title) => title.year))].sort((a, b) => b - a);
   },
 
   /** Other titles in the same category, excluding the given one. */

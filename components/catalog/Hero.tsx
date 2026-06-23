@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Rating } from "@/components/ui/Rating";
 import { PlayIcon } from "@/components/ui/icons";
 import { formatRuntime } from "@/lib/format";
+import { getTranslator } from "@/lib/i18n/server";
 
 /**
  * Cinematic banner for the featured title.
@@ -15,7 +16,8 @@ import { formatRuntime } from "@/lib/format";
  * its content on small screens (nothing is ever clipped), while keeping the
  * tall cinematic look on larger ones.
  */
-export function Hero({ title }: { title: Title }) {
+export async function Hero({ title }: { title: Title }) {
+  const { t } = await getTranslator();
   return (
     <section className="relative overflow-hidden rounded-3xl border border-border">
       {/* Backdrop fills the section, which is sized by its content */}
@@ -27,7 +29,7 @@ export function Hero({ title }: { title: Title }) {
 
       <div className="relative flex min-h-88 flex-col justify-end p-5 sm:min-h-96 sm:p-8 md:min-h-112 md:justify-center md:p-12">
         <div className="max-w-xl space-y-3 sm:space-y-4">
-          <Badge variant="brand">Featured</Badge>
+          <Badge variant="brand">{t("hero.featured")}</Badge>
           <h1 className="text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl">{title.name}</h1>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
@@ -47,13 +49,13 @@ export function Hero({ title }: { title: Title }) {
               className={buttonStyles({ variant: "primary", size: "lg" })}
             >
               <PlayIcon className="size-5" />
-              Play now
+              {t("title.play")}
             </Link>
             <Link
               href={`/title/${title.id}`}
               className={buttonStyles({ variant: "secondary", size: "lg" })}
             >
-              More info
+              {t("title.moreInfo")}
             </Link>
           </div>
         </div>

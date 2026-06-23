@@ -21,6 +21,7 @@ const API_BASE = "https://api.themoviedb.org/3";
 const IMAGE_BASE = "https://image.tmdb.org/t/p";
 const POSTER_SIZE = "w500";
 const BACKDROP_SIZE = "w1280";
+const PROFILE_SIZE = "w185";
 
 // How many pages (20 titles each) to pull from each list. 3 pages × 2 media
 // types ≈ 120 titles, plenty to fill every rail.
@@ -180,6 +181,53 @@ export async function fetchTmdbCatalog(): Promise<Title[]> {
   if (hero) hero.featured = true;
 
   return titles;
+}
+
+/** A billed actor, with their character and (optional) headshot. */
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profileUrl: string | null;
+}
+
+interface TmdbCastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+/**
+ * The top-billed cast for a title, or `[]` when unavailable (no key, request
+ * failure, or a non-TMDB id such as the bundled fallback data).
+ */
+export async function fetchCast(titleId: string, limit = 14): Promise<CastMember[]> {
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) return [];
+
+  const [prefix, rawId] = titleId.split("-");
+  const path = prefix === "movie" ? "movie" : prefix === "series" ? "tv" : null;
+  if (!path || !rawId || !/^\d+$/.test(rawId)) return [];
+
+  try {
+    const url = `${API_BASE}/${path}/${rawId}/credits?api_key=${apiKey}&language=en-US`;
+    const res = await fetch(url, { next: { revalidate: 86400 } });
+    if (!res.ok) return [];
+
+    const data = (await res.json()) as { cast?: TmdbCastMember[] };
+    return (data.cast ?? [])
+      .slice(0, limit)
+      .map((person) => ({
+        id: person.id,
+        name: person.name,
+        character: person.character,
+        profileUrl: img(person.profile_path, PROFILE_SIZE),
+      }));
+  } catch {
+    return [];
+  }
 }
 
 interface TmdbVideo {
