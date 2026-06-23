@@ -8,16 +8,15 @@ import { useContinueWatching } from "@/hooks/useContinueWatching";
 import { getResumePosition } from "@/lib/continueWatching";
 
 /**
- * Connects the player to the Continue-watching store for a specific title:
- * resumes from the last saved position and records progress as it plays.
+ * Wires the player to the Continue-watching store for one title. It resumes
+ * from the last saved spot and saves progress as it plays.
  *
- * Prefers the title's YouTube trailer (`trailerKey`) when one is available, and
- * falls back to the HLS stream otherwise. Both players share the same
- * progress/resume interface so storage works identically either way.
+ * Uses the YouTube trailer when there is one, otherwise the HLS stream. Both
+ * players share the same progress/resume props so storage works the same way.
  */
 export function TitlePlayer({ title, trailerKey }: { title: Title; trailerKey?: string | null }) {
   const { record } = useContinueWatching();
-  // Read the saved resume position once on mount (client only).
+  // Grab the saved resume position once on mount (client only).
   const [startPositionSec] = useState(() => getResumePosition(title.id));
 
   const onProgress = ({ positionSec, durationSec }: { positionSec: number; durationSec: number }) =>

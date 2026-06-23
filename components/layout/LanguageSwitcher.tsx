@@ -7,9 +7,9 @@ import { useI18n } from "@/lib/i18n/I18nProvider";
 import { GlobeIcon, ChevronDownIcon } from "@/components/ui/icons";
 
 /**
- * White globe button with a language dropdown. Selecting a language switches
- * the whole UI (via the i18n cookie + a router refresh). Closes on outside
- * click or Escape.
+ * White globe button with a language dropdown. Picking a language switches the
+ * whole UI (via the i18n cookie plus a router refresh). Closes on outside click
+ * or Escape.
  */
 export function LanguageSwitcher() {
   const { locale, setLocale, t } = useI18n();

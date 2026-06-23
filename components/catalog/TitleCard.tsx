@@ -6,9 +6,9 @@ import { Rating } from "@/components/ui/Rating";
 import { PlayIcon } from "@/components/ui/icons";
 
 /**
- * A single content card: poster, title and metadata, linking to the detail
- * page. `priority` should be set on the first row so the poster counts toward
- * LCP instead of being lazy-loaded.
+ * A single content card: poster, title and metadata, links to the detail page.
+ * Set `priority` on the first row so the poster counts toward LCP instead of
+ * being lazy-loaded.
  */
 export function TitleCard({ title, priority = false }: { title: Title; priority?: boolean }) {
   return (
@@ -26,10 +26,10 @@ export function TitleCard({ title, priority = false }: { title: Title; priority?
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority={priority}
           />
-          {/* Bottom scrim keeps the category badge readable over any artwork */}
+          {/* Dark gradient at the bottom so the badge stays readable on any poster */}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
 
-          {/* Play affordance revealed on hover/focus */}
+          {/* Play button shown on hover/focus */}
           <div className="absolute inset-0 grid place-items-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
             <span className="grid size-12 place-items-center rounded-full gradient-brand text-black shadow-lg">
               <PlayIcon className="size-5" />

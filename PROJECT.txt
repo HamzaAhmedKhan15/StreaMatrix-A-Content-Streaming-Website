@@ -1,0 +1,195 @@
+==============================================================
+ StreaMatrix - a small video streaming "content browser"
+==============================================================
+
+WHAT THIS IS
+------------
+StreaMatrix is a small streaming web app. You can browse a catalog of
+movies and series, search and filter them, open a title's own page, and
+play a video. It's built with Next.js and TypeScript.
+
+The goal was to keep it small but polished, and to keep the code tidy so
+every part is easy to explain.
+
+
+HOW TO RUN IT
+-------------
+  npm install
+  npm run dev      ->  start the dev server at http://localhost:3000
+  npm run build    ->  production build (also type-checks the whole app)
+  npm start        ->  serve the production build
+  npm test         ->  run the unit tests
+  npm run lint     ->  run the linter
+
+Node 20 or newer is recommended.
+
+
+==============================================================
+ WHAT THE TEST ASKED FOR (and where it lives)
+==============================================================
+
+These are the required features from the brief. Everything here is done.
+
+1. Built with Next.js and TypeScript.
+   - Next.js 16 (App Router) + React 19, TypeScript in strict mode.
+
+2. A home page with a responsive grid of cards.
+   - Each card shows a thumbnail, the title, its category, year and rating.
+   - See components/catalog/TitleCard.tsx and TitleGrid.tsx.
+
+3. Search by title and filter by category/genre.
+   - Search box lives in the header (components/catalog/SearchBar.tsx).
+   - Category, type and year filters live in the bar under it
+     (components/layout/FilterBar.tsx) and in the sidebar.
+   - Search and filters all run through the URL (for example
+     /?q=neon or /?category=Action), so any result is a link you can
+     share or bookmark.
+
+4. A detail page for a single title, on its own route.
+   - The route is /title/[id], for example /title/neon-horizon.
+   - See app/title/[id]/page.tsx.
+
+5. A working video player that plays an HLS (.m3u8) stream.
+   - Uses hls.js for most browsers, and the browser's own HLS support on
+     Safari/iOS (so we don't ship extra code there).
+   - See components/player/VideoPlayer.tsx.
+
+6. Sensible loading and error states.
+   - Skeletons while pages load, a spinner while search runs, an empty
+     state when nothing matches, 404 pages for unknown titles, and an
+     error boundary if something throws.
+
+7. Responsive, mobile-first layout.
+   - The grid goes from 2 columns on a phone up to 5 on a wide screen,
+     and the sidebar collapses into a slide-in menu on mobile.
+
+
+==============================================================
+ OPTIONAL EXTRAS FROM THE BRIEF (also done)
+==============================================================
+
+- Static generation + server rendering. Detail pages are pre-built at
+  build time (fast and cacheable). The home page is server-rendered on
+  demand because it reads the search/filter values from the URL.
+
+- Lazy-loaded images through next/image.
+
+- Accessibility basics: semantic HTML, labelled buttons and inputs,
+  visible focus outlines, and a result count that screen readers announce.
+
+- A "Continue watching" row saved in the browser. Your playback position
+  is stored in localStorage, so titles you started show up again with a
+  little progress bar.
+
+- A unit test. The search/sort/filter logic is covered by tests
+  (services/catalog/filter.test.ts).
+
+- A small REST API over the same catalog (/api/titles), to show the data
+  layer can also be reached over HTTP, not just from the pages.
+
+
+==============================================================
+ MY OWN EXTRAS (beyond the brief)
+==============================================================
+
+These two were not asked for. I added them to round the app out.
+
+1) SUBSCRIPTION / PRICING PAGE
+   - Route: /subscribe
+   - A simple "pick a plan" page with three tiers: Basic, Standard and
+     Premium. The middle plan is highlighted as the popular one.
+   - It's a demo only, so no payment is taken and the buttons don't
+     charge anything.
+   - Files: app/subscribe/page.tsx and
+     components/subscriptions/Plans.tsx.
+
+2) LANGUAGE TRANSLATION (multi-language UI)
+   - The interface can switch between English, Arabic, French, Urdu and
+     Chinese using the language menu in the header.
+   - The chosen language is saved in a cookie, so the server renders the
+     page in the right language straight away (no flash of English first).
+   - Arabic and Urdu also flip the whole layout to right-to-left.
+   - Files: everything under lib/i18n/ plus
+     components/layout/LanguageSwitcher.tsx.
+
+
+==============================================================
+ HOW THE CODE IS ORGANISED
+==============================================================
+
+The brief asked for clean, decoupled boundaries, so the app is split into
+small parts that each do one job instead of one big file.
+
+  app/                  The routes. These stay thin and just put
+                        components together.
+    page.tsx            Home page (rails by default, results grid when
+                        you search or filter).
+    title/[id]/         The detail page and its own loading/404 states.
+    subscribe/          The subscription page.
+    api/titles/         The REST API endpoints.
+
+  services/catalog/     THE DATA LAYER. This is the one place the rest of
+                        the app goes to for content.
+    types.ts            The shared types (Title, Category, Rail, etc.).
+    data.ts             The mock dataset (stands in for a database).
+    filter.ts           Pure search/sort logic, with no I/O. This is what
+                        the unit tests check.
+    catalog.service.ts  The async service the app actually calls.
+    index.ts            The single public entry point.
+
+  components/           The UI, grouped by what it's for.
+    ui/                 Small reusable pieces (Button, Badge, Spinner...).
+    catalog/            Cards, the grid, rails, the hero, search input.
+    player/             The video player and its wrappers.
+    watching/           The "Continue watching" row and card.
+    layout/             The header, sidebar, footer and app shell.
+    subscriptions/      The pricing page UI.
+
+  hooks/                Reusable client hooks.
+  lib/                  Small helpers (formatting, class names, storage)
+                        and the i18n (translation) setup.
+
+The important rule: the UI never reads the raw dataset directly. It always
+goes through the catalog service. So swapping the mock data for a real
+database or the TMDB API later would mean changing one file, and nothing
+else would have to change.
+
+
+==============================================================
+ MAIN DECISIONS AND TRADE-OFFS
+==============================================================
+
+- Search and filters go through the URL.
+  Every search/filter ends up as a URL like /?q=... or /?type=series. One
+  code path handles all of them, and every result is a shareable link. The
+  trade-off is that the home page can't be fully static, since it has to
+  read those values per request.
+
+- Mock data instead of a live API.
+  Keeps the app self-contained: no API keys, no rate limits, works offline.
+  Because of the service boundary, switching to TMDB later is a one-file
+  change. The trade-off is a small, fixed catalog, which is fine for a demo.
+
+- hls.js with a native fallback.
+  Most browsers can't play .m3u8 on their own, so hls.js handles them.
+  Safari can, so there we skip the library. hls.js is only loaded on the
+  client when it's actually needed.
+
+- Rails that load as you scroll.
+  The home page is a set of horizontal rows. Only the first few render up
+  front; the rest appear as you scroll down, so the first paint stays light.
+
+
+==============================================================
+ TECH STACK
+==============================================================
+
+  Framework   Next.js 16 (App Router) + React 19
+  Language    TypeScript (strict)
+  Styling     Tailwind CSS v4
+  Video       hls.js (+ native HLS on Safari)
+  Tests       Vitest
+  Images      next/image with TMDB API key || locally-generated SVG gradient posters as Fallback
+
+
+

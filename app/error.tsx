@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/Button";
 import { AlertIcon } from "@/components/ui/icons";
 
 /**
- * Route error boundary for the home page. Must be a Client Component.
- * Next 16 passes `unstable_retry`; we also accept `reset` so the retry button
- * works across versions.
+ * Error boundary for the home page. Has to be a Client Component.
+ * Next 16 passes `unstable_retry`, but we also take `reset` so the retry
+ * button works on older versions too.
  */
 export default function HomeError({
   error,

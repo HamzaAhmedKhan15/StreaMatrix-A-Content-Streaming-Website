@@ -111,8 +111,8 @@ function PlanCard({ plan }: { plan: Plan }) {
   );
 }
 
-/** Pricing page: three plans with the middle one highlighted. */
-export function SubscriptionPlans() {
+/** Pricing page: three plans, with the middle one highlighted. */
+export function Plans() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <Link

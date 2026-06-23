@@ -6,13 +6,13 @@ import { ContinueWatchingCard } from "./ContinueWatchingCard";
 
 /**
  * "Continue watching" shelf for the home page. Reads from localStorage, so it
- * renders nothing until hydrated and nothing when the list is empty.
+ * shows nothing until hydrated and nothing when the list is empty.
  */
 export function ContinueWatchingRow() {
   const { items, remove } = useContinueWatching();
   const { t } = useI18n();
 
-  // Empty during SSR / first paint (server snapshot), then fills after hydration.
+  // Empty during SSR and first paint, then fills in after hydration.
   if (items.length === 0) return null;
 
   return (

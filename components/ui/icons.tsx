@@ -1,9 +1,9 @@
 import type { SVGProps } from "react";
 
 /**
- * Inline icon set. Hand-rolled SVGs keep the bundle tiny and avoid an icon
- * dependency. Each icon inherits `currentColor` and forwards props so callers
- * can size/style them with utility classes.
+ * Inline icon set. Hand-rolled SVGs so we don't pull in an icon library. Each
+ * icon uses `currentColor` and forwards props, so callers can size and style
+ * them with utility classes.
  */
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -40,7 +40,7 @@ export function SearchIcon(props: IconProps) {
 export function FilterIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      {/* Three horizontal sliders, each with a knob at a different position. */}
+      {/* Three sliders, each with a knob at a different spot. */}
       <line x1="3" y1="6" x2="21" y2="6" />
       <line x1="3" y1="12" x2="21" y2="12" />
       <line x1="3" y1="18" x2="21" y2="18" />

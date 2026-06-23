@@ -1,3 +1,5 @@
+/** @format */
+
 import Link from "next/link";
 import type { Title } from "@/services/catalog";
 import { SmoothImage } from "@/components/ui/SmoothImage";
@@ -8,19 +10,11 @@ import { PlayIcon } from "@/components/ui/icons";
 import { formatRuntime } from "@/lib/format";
 import { getTranslator } from "@/lib/i18n/server";
 
-/**
- * Cinematic banner for the featured title.
- *
- * The backdrop is an absolutely-positioned background and the content sits in
- * normal flow with a responsive `min-height`. This way the section grows to fit
- * its content on small screens (nothing is ever clipped), while keeping the
- * tall cinematic look on larger ones.
- */
 export async function Hero({ title }: { title: Title }) {
   const { t } = await getTranslator();
   return (
     <section className="relative overflow-hidden rounded-3xl border border-border">
-      {/* Backdrop fills the section, which is sized by its content */}
+      {/* Backdrop fills the section, the content sets its size */}
       <div className="absolute inset-0">
         <SmoothImage src={title.backdropUrl} alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-linear-to-t from-background via-background/70 to-background/10" />
@@ -39,22 +33,14 @@ export async function Hero({ title }: { title: Title }) {
             <Badge variant="outline">{title.maturity}</Badge>
           </div>
 
-          <p className="line-clamp-2 text-sm text-muted sm:line-clamp-3 sm:text-base md:text-lg">
-            {title.synopsis}
-          </p>
+          <p className="line-clamp-2 text-sm text-muted sm:line-clamp-3 sm:text-base md:text-lg">{title.synopsis}</p>
 
           <div className="flex flex-wrap gap-3 pt-1">
-            <Link
-              href={`/title/${title.id}`}
-              className={buttonStyles({ variant: "primary", size: "lg" })}
-            >
+            <Link href={`/title/${title.id}`} className={buttonStyles({ variant: "primary", size: "lg" })}>
               <PlayIcon className="size-5" />
               {t("title.play")}
             </Link>
-            <Link
-              href={`/title/${title.id}`}
-              className={buttonStyles({ variant: "secondary", size: "lg" })}
-            >
+            <Link href={`/title/${title.id}`} className={buttonStyles({ variant: "secondary", size: "lg" })}>
               {t("title.moreInfo")}
             </Link>
           </div>

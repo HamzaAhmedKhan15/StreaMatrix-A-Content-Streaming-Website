@@ -1,16 +1,15 @@
 /**
  * TMDB (The Movie Database) client.
  *
- * Turns TMDB's "popular movies / popular TV" endpoints into our own `Title`
- * shape so the rest of the app keeps consuming the catalog service unchanged.
- * Real posters/backdrops come straight from TMDB's image CDN; everything the
- * popular lists don't provide (runtime, cast) gets a sensible default, and any
- * title missing artwork falls back to the locally-generated gradient so a card
- * is never blank.
+ * Turns TMDB's popular movie and TV endpoints into our own `Title` shape so the
+ * rest of the app keeps using the catalog service unchanged. Real posters and
+ * backdrops come from TMDB's image CDN. Anything the popular lists don't give us
+ * (runtime, cast) gets a default, and any title missing artwork falls back to
+ * the locally-generated gradient so a card is never blank.
  *
- * The API key is read from `TMDB_API_KEY` (server-only — see `.env.local`). If
- * it is missing or a request fails, `fetchTmdbCatalog` returns `[]` and the
- * caller falls back to the bundled mock catalog, so the app still builds/runs
+ * The API key comes from `TMDB_API_KEY` (server-only, see `.env.local`). If it's
+ * missing or a request fails, `fetchTmdbCatalog` returns `[]` and the caller
+ * falls back to the bundled mock catalog, so the app still builds and runs
  * offline and in CI.
  */
 
@@ -23,11 +22,11 @@ const POSTER_SIZE = "w500";
 const BACKDROP_SIZE = "w1280";
 const PROFILE_SIZE = "w185";
 
-// How many pages (20 titles each) to pull from each list. 3 pages × 2 media
-// types ≈ 120 titles, plenty to fill every rail.
+// How many pages (20 titles each) to pull from each list. 3 pages times 2 media
+// types is about 120 titles, plenty to fill every rail.
 const PAGES_PER_LIST = 3;
 
-// Public HLS test streams — reused so the player always has something real to
+// Public HLS test streams, reused so the player always has something real to
 // play (TMDB does not provide streams). Cycled across titles by index.
 const STREAMS = [
   "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
@@ -36,7 +35,7 @@ const STREAMS = [
   "https://test-streams.mux.dev/pts_shift/master.m3u8",
 ] as const;
 
-/** TMDB genre id → our fixed catalog category. */
+/** Maps a TMDB genre id to our fixed catalog category. */
 const GENRE_TO_CATEGORY: Record<number, Category> = {
   28: "Action", 12: "Action", 10759: "Action", // Action, Adventure, Action & Adventure
   16: "Animation",
@@ -47,7 +46,7 @@ const GENRE_TO_CATEGORY: Record<number, Category> = {
   878: "Sci-Fi", 14: "Sci-Fi", 10765: "Sci-Fi", // Sci-Fi, Fantasy, Sci-Fi & Fantasy
 };
 
-/** TMDB genre id → display name (movie + TV lists merged; stable values). */
+/** Maps a TMDB genre id to a display name (movie and TV lists merged). */
 const GENRE_NAMES: Record<number, string> = {
   28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 80: "Crime",
   99: "Documentary", 18: "Drama", 10751: "Family", 14: "Fantasy", 36: "History",
@@ -106,7 +105,7 @@ function toTitle(result: TmdbResult, type: MediaType, index: number): Title {
     year: Number.isFinite(year) ? year : new Date().getFullYear(),
     rating: Math.round(result.vote_average * 10) / 10,
     maturity: type === "movie" ? (adult ? "R" : "PG-13") : adult ? "TV-MA" : "TV-14",
-    // Runtime/episode length isn't in the list endpoints; use a typical value.
+    // Runtime/episode length isn't in the list endpoints, so use a typical value.
     durationMinutes: type === "movie" ? 120 : 45,
     synopsis: result.overview?.trim() || "No description available yet.",
     cast: [],
@@ -120,7 +119,7 @@ function toTitle(result: TmdbResult, type: MediaType, index: number): Title {
 async function fetchList(path: string, params: string, apiKey: string): Promise<TmdbResult[]> {
   const url = `${API_BASE}${path}?api_key=${apiKey}&language=en-US&${params}`;
   const res = await fetch(url, {
-    // Cache the upstream response for a day; the catalog rarely changes.
+    // Cache the upstream response for a day since the catalog rarely changes.
     next: { revalidate: 86400 },
   });
   if (!res.ok) throw new Error(`TMDB ${path} (${params}) -> ${res.status}`);
@@ -141,7 +140,7 @@ export async function fetchTmdbCatalog(): Promise<Title[]> {
 
   const pages = Array.from({ length: PAGES_PER_LIST }, (_, i) => i + 1);
   // `discover` with `with_original_language=en` keeps the catalog to
-  // English-language (Hollywood) movies + TV and animation, excluding anime
+  // English-language (Hollywood) movies, TV and animation. This leaves out anime
   // (ja), Bollywood (hi), Tamil/Telugu (ta/te) and other regional content.
   const movieParams = (page: number) =>
     `with_original_language=en&sort_by=popularity.desc&include_adult=false&vote_count.gte=150&page=${page}`;
@@ -200,7 +199,7 @@ interface TmdbCastMember {
 }
 
 /**
- * The top-billed cast for a title, or `[]` when unavailable (no key, request
+ * The top-billed cast for a title, or `[]` when we can't get it (no key, request
  * failure, or a non-TMDB id such as the bundled fallback data).
  */
 export async function fetchCast(titleId: string, limit = 14): Promise<CastMember[]> {
@@ -238,8 +237,8 @@ interface TmdbVideo {
 }
 
 /**
- * The YouTube key of the best available trailer for a title, or `null` if there
- * is none (or the id isn't a real TMDB title — e.g. the bundled fallback data).
+ * The YouTube key of the best trailer for a title, or `null` if there isn't one
+ * (or the id isn't a real TMDB title, like the bundled fallback data).
  *
  * `titleId` is our catalog id, e.g. `movie-1234` / `series-5678`.
  */

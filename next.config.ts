@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Artwork is inlined as local SVG data URIs (see lib/artwork.ts), so there
-    // is nothing for the optimizer to fetch/resize. `next/image` is still used
+    // Artwork is inlined as local SVG data URIs (see lib/artwork.ts), so there's
+    // nothing for the optimizer to fetch or resize. We still use `next/image`
     // for lazy-loading and layout stability.
     unoptimized: true,
   },

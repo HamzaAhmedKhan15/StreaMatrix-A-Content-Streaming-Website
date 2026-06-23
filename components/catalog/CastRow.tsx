@@ -10,8 +10,8 @@ function initials(name: string): string {
 }
 
 /**
- * Horizontally scrollable cast list: headshot, actor name and character.
- * Renders nothing when there's no cast (e.g. the bundled fallback data).
+ * Scrollable cast list: headshot, actor name and character. Renders nothing
+ * when there's no cast (like the bundled fallback data).
  */
 export async function CastRow({ cast }: { cast: CastMember[] }) {
   if (cast.length === 0) return null;

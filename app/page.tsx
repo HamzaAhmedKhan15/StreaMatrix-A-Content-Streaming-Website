@@ -32,9 +32,9 @@ function resultsHeading(t: Translate, q: string, category: string, type?: MediaT
 }
 
 /**
- * Home page (Server Component). Reads the URL: with a search/filter it renders a
- * results grid; otherwise it shows the hero, continue-watching, and the themed
- * rails. Reading `searchParams` makes this route server-rendered on demand.
+ * Home page. If the URL has a search or filter, show a results grid.
+ * Otherwise show the hero, continue-watching, and the rails.
+ * Reading `searchParams` makes this route server-rendered on demand.
  */
 export default async function HomePage({ searchParams }: HomeProps) {
   const sp = await searchParams;
@@ -71,7 +71,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
     catalogService.getRails(),
   ]);
 
-  // Translate each rail's heading by its id, falling back to the service title.
+  // Translate each rail heading by its id, fall back to the service title.
   const localizedRails = rails.map((rail) => ({
     ...rail,
     title: t(`rail.${rail.id}` as MessageKey) || rail.title,

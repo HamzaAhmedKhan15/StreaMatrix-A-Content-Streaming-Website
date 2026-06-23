@@ -13,8 +13,8 @@ const COMPLETE_RATIO = 0.95;
 const MIN_POSITION_SEC = 10;
 
 /*
- * localStorage is an *external store*, so we read it with `useSyncExternalStore`
- * rather than an effect + setState. This gives us, for free:
+ * localStorage is an external store, so we read it with `useSyncExternalStore`
+ * instead of an effect + setState. That gets us, for free:
  *   - SSR safety (the server snapshot is always empty),
  *   - no hydration mismatch (client starts from the server snapshot, then syncs),
  *   - cross-tab updates (via the `storage` event).
@@ -23,8 +23,8 @@ const MIN_POSITION_SEC = 10;
 const EMPTY: WatchProgress[] = [];
 const listeners = new Set<() => void>();
 
-// Cache the parsed value keyed by the raw string so `getSnapshot` returns a
-// stable reference while storage is unchanged (required to avoid render loops).
+// Cache the parsed value by the raw string so `getSnapshot` returns the same
+// reference while storage hasn't changed. Needed to avoid render loops.
 let cachedRaw: string | null | undefined;
 let cachedValue: WatchProgress[] = EMPTY;
 
@@ -43,7 +43,7 @@ function getServerSnapshot(): WatchProgress[] {
 
 function subscribe(onChange: () => void): () => void {
   listeners.add(onChange);
-  // `storage` only fires in *other* tabs, which keeps them in sync.
+  // `storage` only fires in other tabs, which keeps them in sync.
   const onStorage = (event: StorageEvent) => {
     if (event.key === STORAGE_KEY) onChange();
   };
@@ -63,9 +63,9 @@ function persist(next: WatchProgress[]): void {
 /**
  * React access to the continue-watching list.
  *
- * - `items`  – current entries, most-recent first
- * - `record` – upsert progress for a title (called by the player)
- * - `remove` – drop a title from the row
+ * - `items`  current entries, most recent first
+ * - `record` add or update progress for a title (called by the player)
+ * - `remove` drop a title from the row
  */
 export function useContinueWatching() {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);

@@ -1,10 +1,10 @@
 /**
- * Browser-side persistence for the "Continue watching" row.
+ * Browser-side storage for the "Continue watching" row.
  *
- * Progress lives in localStorage as a small, denormalised snapshot so the row
- * can render instantly and offline — no extra fetch to resolve titles. All
- * access goes through these helpers, which are SSR-safe (guarded on `window`)
- * and never throw, even if storage is full or disabled.
+ * Progress lives in localStorage as a small snapshot so the row can render right
+ * away and offline, with no extra fetch to look up titles. All access goes
+ * through these helpers. They're SSR-safe (guarded on `window`) and never throw,
+ * even if storage is full or disabled.
  */
 
 export const STORAGE_KEY = "streamly:continue-watching:v1";
@@ -37,7 +37,7 @@ export function writeProgress(entries: WatchProgress[]): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entries.slice(0, MAX_ENTRIES)));
   } catch {
-    // Ignore quota / disabled-storage errors — progress is non-critical.
+    // Ignore quota or disabled-storage errors, progress isn't critical.
   }
 }
 

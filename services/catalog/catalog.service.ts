@@ -11,13 +11,13 @@ import {
 } from "./types";
 
 /**
- * Catalog service — the single boundary the rest of the app uses to read
- * content. UI never touches the raw dataset; it asks the service.
+ * The catalog service. This is the one place the app reads content from, so the
+ * UI never touches the raw dataset, it asks the service.
  *
- * Methods are `async` to model a real data source: swapping the mock data for a
- * database or HTTP API later would not change a single call site. The actual
- * filtering/sorting lives in `./filter` as pure functions so it can be reused
- * and unit-tested in isolation.
+ * Methods are `async` to act like a real data source, so swapping the mock data
+ * for a database or HTTP API later wouldn't change any call site. The actual
+ * filtering and sorting lives in `./filter` as pure functions so it can be
+ * reused and tested on its own.
  */
 export const catalogService = {
   /** List titles matching a search/category/type/sort query. */
@@ -41,7 +41,7 @@ export const catalogService = {
     return fetchCast(id);
   },
 
-  /** Ids of every title — handy for static generation of detail pages. */
+  /** Ids of every title, handy for static generation of detail pages. */
   async getAllIds(): Promise<string[]> {
     const catalog = await loadCatalog();
     return catalog.map((title) => title.id);

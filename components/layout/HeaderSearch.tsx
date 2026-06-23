@@ -5,13 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SearchBar } from "@/components/catalog/SearchBar";
 
 /**
- * Global search, living in the header. The URL is the source of truth: typing
- * pushes `/?q=...` (debounced), which the home page reads and renders results
- * for. Navigation happens in the change handler — never in an effect — so the
- * browser Back button is never fought.
+ * Global search that lives in the header. The URL is the source of truth.
+ * Typing pushes `/?q=...` (debounced), which the home page reads and renders
+ * results for. We navigate in the change handler, never in an effect, so we
+ * don't fight the browser Back button.
  *
- * `searching` (the debounce window + the pending route transition) drives the
- * three-bar loader, so it shows from the first keystroke until results render.
+ * The loading flag (debounce window plus the pending route transition) drives
+ * the three-bar loader, so it shows from the first keystroke until results render.
  */
 export function HeaderSearch() {
   const router = useRouter();

@@ -11,8 +11,8 @@ export async function getLocale(): Promise<Locale> {
 }
 
 /**
- * Server-side translator. Returns the current `locale` and a `t(key)` lookup,
- * falling back to English (then the key itself) for any missing string.
+ * Server-side translator. Returns the current `locale` and a `t(key)` lookup.
+ * Missing strings fall back to English, then to the key itself.
  */
 export async function getTranslator(): Promise<{
   locale: Locale;

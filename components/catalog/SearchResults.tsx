@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,9 +10,8 @@ import { TitleGrid } from "./TitleGrid";
 import { EmptyState } from "./EmptyState";
 import { Spinner } from "@/components/ui/Spinner";
 
-// Keep the loader on screen for at least this long so it always reads as a
-// smooth, deliberate transition instead of a flicker (the in-memory query is
-// near-instant otherwise).
+// Keep the loader up for at least this long so it reads as a real transition
+// instead of a flicker (the in-memory query is near-instant otherwise).
 const MIN_VISIBLE_MS = 1200;
 
 /** Centered rotating loader shown while results are being fetched. */
@@ -24,11 +25,10 @@ function ResultsLoader() {
 
 /**
  * Client-side search results. Reads the query from the URL (kept in sync by the
- * header search), fetches matches from `/api/titles`, and shows a centered
- * spinner over the content area first — then fades the results in smoothly.
- * Stale in-flight requests are aborted so fast typing never flashes old data.
- *
- * Posters still lazy-load + fade in individually via TitleCard's SmoothImage.
+ * header search), fetches matches from `/api/titles`, shows a centered spinner
+ * first, then fades the results in. Stale in-flight requests are aborted so
+ * fast typing never flashes old data.
+
  */
 export function SearchResults() {
   const params = useSearchParams();
@@ -39,9 +39,6 @@ export function SearchResults() {
   const genre = params.get("genre") ?? "";
   const year = params.get("year") ?? "";
 
-  // `data` is tagged with the query it belongs to; while it doesn't match the
-  // current query we're still loading. Deriving `loading` this way avoids
-  // calling setState synchronously inside the effect.
   const key = `${q}|${category}|${type}|${genre}|${year}`;
   const [data, setData] = useState<{ key: string; titles: Title[] } | null>(null);
   const loading = !data || data.key !== key;
@@ -68,7 +65,7 @@ export function SearchResults() {
       .then((res) => res.json())
       .then((result: { results?: Title[] }) => commit(result.results ?? []))
       .catch((error: unknown) => {
-        // Ignore aborts from superseded requests; surface anything else as empty.
+        // Ignore aborts from superseded requests, treat anything else as empty.
         if (!(error instanceof DOMException && error.name === "AbortError")) commit([]);
       });
 

@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # StreaMatrix — a small video streaming content browser
 
 Browse a catalog of movies and series, search and filter them, open a title's
@@ -88,7 +90,7 @@ components/                  ← presentation, grouped by purpose
   catalog/                   ← cards, grid, rails, hero, search input, skeletons
   player/                    ← HLS video player + the title-specific wrapper
   watching/                  ← continue-watching row + card
-  layout/                    ← AppShell, header, sidebar drawer, footer
+  layout/                    ← MainApp, header, sidebar drawer, footer
 
 hooks/                       ← reusable client hooks (useContinueWatching)
 lib/                         ← tiny helpers (formatting, classnames, storage)
@@ -154,7 +156,7 @@ in sync, all without a `setState`-in-effect.
 
 **A REST API _and_ direct service calls.**
 Server Components import the service directly (faster, no self-fetch). The same
-service is *also* published at `/api/titles` to prove the boundary is real — a
+service is _also_ published at `/api/titles` to prove the boundary is real — a
 client widget or a separate microservice could consume it without touching the
 UI.
 

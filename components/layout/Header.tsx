@@ -9,8 +9,8 @@ import { HeaderSearch } from "./HeaderSearch";
 import { FilterBar } from "./FilterBar";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-/** Sticky top bar: hamburger (toggles the sidebar), brand mark, search and language. */
-export function SiteHeader({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+/** Sticky top bar: hamburger menu, brand, search box and language picker. */
+export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const { t } = useI18n();
 
   return (
@@ -38,21 +38,19 @@ export function SiteHeader({ onToggleSidebar }: { onToggleSidebar: () => void })
           </span>
         </Link>
 
-        {/* Search sits next to the brand; min-w-0 lets it shrink on small screens */}
+        {/* min-w-0 lets the search box shrink on small screens */}
         <div className="min-w-0 max-w-lg flex-1">
-          {/* Suspense keeps the rest of the page static while search reads the URL */}
+          {/* Suspense lets the rest of the page render while search reads the URL */}
           <Suspense fallback={<SearchBar value="" onChange={() => {}} />}>
             <HeaderSearch />
           </Suspense>
         </div>
 
-        {/* Language selector pinned to the right end */}
         <LanguageSwitcher />
       </div>
 
-      {/* Second row: stackable filters, pinned to the right end. Scrolls
-          horizontally on narrow screens so the header keeps a fixed height
-          (the sidebar is offset to match). */}
+      {/* Second row of filters. It scrolls sideways on narrow screens so the
+          header keeps the same height (the sidebar lines up with it). */}
       <div className="no-scrollbar flex h-12 items-center justify-end gap-3 overflow-x-auto border-t border-border/60 px-3 sm:px-6">
         <Suspense fallback={null}>
           <FilterBar />

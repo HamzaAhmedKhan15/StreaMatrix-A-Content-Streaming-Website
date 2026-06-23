@@ -14,8 +14,8 @@ import { getTranslator } from "@/lib/i18n/server";
 type DetailPageProps = { params: Promise<{ id: string }> };
 
 /**
- * Pre-render a static page for every title at build time (SSG). Detail pages
- * don't depend on the request, so they can be fully static and CDN-cached.
+ * Pre-build a static page for every title at build time. Detail pages don't
+ * depend on the request, so they can be fully static.
  */
 export async function generateStaticParams() {
   const ids = await catalogService.getAllIds();
@@ -43,7 +43,7 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
   const { id } = await params;
   const title = await catalogService.getById(id);
 
-  // Unknown id -> render the title-level not-found.tsx (404).
+  // No title with this id, so show the 404 page.
   if (!title) notFound();
 
   const [related, trailerKey, cast, { t }] = await Promise.all([
@@ -63,7 +63,7 @@ export default async function TitleDetailPage({ params }: DetailPageProps) {
         {t("detail.back")}
       </Link>
 
-      {/* Trailer (YouTube) when available, else HLS stream — with resume tracking */}
+      {/* Plays the YouTube trailer if we have one, otherwise the HLS stream. Tracks resume position. */}
       <TitlePlayer title={title} trailerKey={trailerKey} />
 
       <header className="space-y-4">

@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 import { TitleGridSkeleton } from "@/components/catalog/skeletons";
 
-/** Streamed instantly on navigation to "/" while the page renders. */
+/** Shown right away when you go to "/" while the page loads. */
 export default function HomeLoading() {
   return (
     <div className="mx-auto max-w-7xl space-y-10 px-4 py-6 sm:px-6 sm:py-8">

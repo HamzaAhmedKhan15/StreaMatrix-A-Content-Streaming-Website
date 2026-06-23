@@ -1,11 +1,11 @@
 /**
  * Locally-generated placeholder artwork.
  *
- * Instead of depending on a remote image host (which can be blocked, slow, or
- * rate-limited when a page requests dozens of images at once), every title gets
- * its own gradient poster/backdrop as an inline SVG data URI. These render
- * instantly, work offline, and never 404 — and they stay on-theme by using cool
- * blue→green→indigo hues derived from the title id.
+ * Instead of relying on a remote image host (which can be blocked, slow, or
+ * rate-limited when a page asks for dozens of images at once), every title gets
+ * its own gradient poster/backdrop as an inline SVG data URI. These render right
+ * away, work offline, and never 404. They stay on-theme by using cool blue to
+ * green to indigo hues derived from the title id.
  */
 
 type ArtInput = { id: string; name: string; category: string };
@@ -68,7 +68,7 @@ const FONT = "'Segoe UI', system-ui, Arial, sans-serif";
 
 function render(input: ArtInput, width: number, height: number, portrait: boolean): string {
   const seed = hash(input.id);
-  const hue = 150 + (seed % 140); // cool range: teal → blue → indigo → violet
+  const hue = 150 + (seed % 140); // cool range: teal, blue, indigo, violet
   const c1 = `hsl(${hue} 68% 52%)`;
   const c2 = `hsl(${(hue + 38) % 360} 64% 32%)`;
 

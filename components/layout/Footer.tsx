@@ -36,8 +36,8 @@ const FOOTER_SECTIONS: {
   },
 ];
 
-/** Site footer with the brand and grouped navigation links. */
-export function SiteFooter() {
+/** Footer with the brand and grouped navigation links. */
+export function Footer() {
   const { t } = useI18n();
   const year = new Date().getFullYear();
 

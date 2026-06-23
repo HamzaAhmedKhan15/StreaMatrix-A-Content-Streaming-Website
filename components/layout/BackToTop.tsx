@@ -8,10 +8,10 @@ import { ChevronUpIcon } from "@/components/ui/icons";
 /**
  * Floating "back to top" button.
  *
- * Appears in the bottom-right corner only once the user has scrolled to (near)
- * the very bottom of a scrollable page, and smoothly returns them to the top.
- * Stays mounted and just fades in/out so it can animate, and is removed from
- * the tab order / a11y tree while hidden.
+ * Shows in the bottom-right corner only once the user scrolls near the very
+ * bottom of a scrollable page, then smoothly scrolls them back up. It stays
+ * mounted and just fades in and out so it can animate, and drops out of the
+ * tab order and a11y tree while hidden.
  */
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -26,7 +26,7 @@ export function BackToTop() {
         setVisible(false);
         return;
       }
-      // Within 24px of the bottom counts as "at the full bottom".
+      // Within 24px of the bottom counts as being at the bottom.
       setVisible(window.scrollY >= scrollable - 24);
     };
 
@@ -47,9 +47,9 @@ export function BackToTop() {
       return;
     }
 
-    // Custom animation so the rise is noticeably slow and gentle (the native
-    // "smooth" behaviour is too fast and not configurable). Duration scales
-    // with distance, clamped to a calm 0.9s–1.8s.
+    // Custom animation so the rise is slow and gentle. The native "smooth"
+    // behaviour is too fast and you can't configure it. Duration scales with
+    // distance, clamped to a calm 0.9s to 1.8s.
     const duration = Math.min(1800, Math.max(900, start * 0.8));
     const startTime = performance.now();
     const easeInOutCubic = (t: number) =>

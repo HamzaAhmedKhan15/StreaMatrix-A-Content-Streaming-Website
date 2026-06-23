@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -10,9 +12,9 @@ import { Spinner } from "@/components/ui/Spinner";
 const INITIAL = 3;
 
 /**
- * Renders the home rails progressively. The first 3 show immediately; after
- * that a loader sits at the bottom and reveals more rails as it scrolls into
- * view, each fading in smoothly.
+ * Renders the home rails a few at a time. The first 3 show right away, then a
+ * loader at the bottom reveals more rails as it scrolls into view, each fading
+ * in.
  */
 export function LazyRails({ rails }: { rails: Rail[] }) {
   const [visibleCount, setVisibleCount] = useState(Math.min(INITIAL, rails.length));
@@ -21,12 +23,6 @@ export function LazyRails({ rails }: { rails: Rail[] }) {
   const total = rails.length;
   const hasMore = visibleCount < total;
 
-  // Re-creating the observer whenever `visibleCount` changes is what makes this
-  // reliable: a fresh IntersectionObserver always reports the sentinel's
-  // *current* position on its next callback. So if the loader is still in view
-  // after a rail appears (a short rail, or a tall viewport), it simply reveals
-  // the next one too — instead of getting stuck waiting for a scroll event that
-  // never comes, which was the old one-reveal-per-scroll bug.
   useEffect(() => {
     if (!hasMore) return;
     const sentinel = sentinelRef.current;
@@ -38,7 +34,7 @@ export function LazyRails({ rails }: { rails: Rail[] }) {
           setVisibleCount((count) => Math.min(count + 1, total));
         }
       },
-      // Start loading a bit before the loader is fully on screen.
+      // Start loading a bit before the loader is fully visible.
       { rootMargin: "300px 0px" },
     );
 
@@ -52,7 +48,7 @@ export function LazyRails({ rails }: { rails: Rail[] }) {
         <div
           key={rail.id}
           id={rail.id}
-          // Only the lazily-revealed rails animate; the first paint stays instant.
+          // Only the lazy rails animate, the first paint stays instant.
           className={cn("scroll-mt-20", index >= INITIAL && "animate-rail-in")}
         >
           <TitleRow heading={rail.title} titles={rail.titles} />

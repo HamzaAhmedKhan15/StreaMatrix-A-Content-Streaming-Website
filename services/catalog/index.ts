@@ -1,9 +1,9 @@
 /**
  * Public entrypoint for the catalog service.
  *
- * The rest of the app imports from `@/services/catalog` only — never from the
- * internal `data`/`catalog.service` files directly. This keeps the boundary
- * small and makes the implementation easy to replace.
+ * The rest of the app imports from `@/services/catalog` only, never from the
+ * internal `data`/`catalog.service` files directly. That keeps the boundary
+ * small and makes the implementation easy to swap out.
  */
 export { catalogService } from "./catalog.service";
 export { filterTitles, sortTitles } from "./filter";

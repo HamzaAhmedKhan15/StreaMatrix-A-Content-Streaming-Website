@@ -1,9 +1,8 @@
 /**
  * Domain types for the catalog service.
  *
- * These describe the *shape of the data* and are intentionally free of any UI
- * or framework concerns, so the same types can be reused by Server Components,
- * the REST API, and tests.
+ * These just describe the shape of the data and stay free of any UI or framework
+ * stuff, so the same types work in Server Components, the REST API, and tests.
  */
 
 /** The fixed set of genres a title can belong to. */
@@ -59,9 +58,9 @@ export interface CatalogQuery {
   /** Media type to filter by ("movie" | "series"). */
   type?: MediaType;
   /**
-   * Genre to filter by — matched against a title's primary category *and* its
+   * Genre to filter by. Matched against a title's primary category and its
    * `genres` list, so "Comedy" finds both Comedy-categorised titles and titles
-   * that merely list Comedy among their genres. `undefined`/"all" means none.
+   * that just list Comedy among their genres. `undefined`/"all" means no filter.
    */
   genre?: string;
   /** Release year to filter by. `undefined` means no year filter. */

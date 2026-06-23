@@ -1,11 +1,9 @@
-/** @format */
-
 import type { Title } from "@/services/catalog";
 import { TitleCard } from "./TitleCard";
 
 /**
- * Horizontally scrollable row of cards with a heading. Reused for "More like
- * this" and any other shelf-style listing. Renders nothing when empty.
+ * Scrollable row of cards with a heading. Reused for "More like this" and any
+ * other shelf-style listing. Renders nothing when empty.
  */
 export function TitleRow({ heading, titles }: { heading: string; titles: Title[] }) {
   if (titles.length === 0) return null;

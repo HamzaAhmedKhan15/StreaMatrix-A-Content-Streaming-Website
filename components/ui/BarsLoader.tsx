@@ -1,9 +1,9 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Three vertical bars that pulse like an equalizer. Used as a compact "working"
- * indicator (e.g. while a search is in flight). Sized to sit inline next to
- * text/icons; animation lives in globals.css (`.bars-loader-bar`).
+ * Three bars that pulse like an equalizer. Compact "working" indicator, e.g.
+ * while a search is running. Sits inline next to text/icons. Animation lives in
+ * globals.css (`.bars-loader-bar`).
  */
 export function BarsLoader({ className }: { className?: string }) {
   return (

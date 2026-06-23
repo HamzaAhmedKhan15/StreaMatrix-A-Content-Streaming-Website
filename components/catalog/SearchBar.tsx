@@ -5,10 +5,10 @@ import { BarsLoader } from "@/components/ui/BarsLoader";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 
 /**
- * Controlled search input. Laid out with flexbox (icon · input · clear) so the
- * placeholder can never overlap the icon. Presentational only — the parent owns
- * the value, which keeps this reusable. When `loading` is set, the leading icon
- * is swapped for an animated three-bar "searching" indicator.
+ * Controlled search input. Laid out with flexbox (icon, input, clear) so the
+ * placeholder can't overlap the icon. Presentational only, the parent owns the
+ * value so this stays reusable. When `loading` is set, a three-bar "searching"
+ * indicator shows on the right.
  */
 export function SearchBar({
   value,
@@ -37,7 +37,7 @@ export function SearchBar({
         placeholder={placeholder ?? t("search.placeholder")}
         className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted"
       />
-      {/* Searching indicator sits at the right, just after the typed text */}
+      {/* Searching indicator sits on the right, after the typed text */}
       {loading && <BarsLoader className="shrink-0" />}
       {value && (
         <button

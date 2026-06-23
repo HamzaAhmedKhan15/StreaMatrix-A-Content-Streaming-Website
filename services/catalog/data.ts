@@ -6,18 +6,18 @@ import type { Title } from "./types";
 /**
  * Catalog data source.
  *
- * `loadCatalog()` is the single entrypoint the service uses. It fetches real
- * titles + artwork from TMDB (see `lib/tmdb.ts`) and falls back to the bundled
- * `FALLBACK_CATALOG` below when no API key is configured or the request fails —
- * so the app still builds, runs offline, and passes CI without a network.
+ * `loadCatalog()` is the one entrypoint the service uses. It pulls real titles
+ * and artwork from TMDB (see `lib/tmdb.ts`) and falls back to the bundled
+ * `FALLBACK_CATALOG` below when there's no API key or the request fails, so the
+ * app still builds and runs offline and in CI.
  *
- * The result is memoised at module scope so the dataset is fetched once per
- * server process and stays consistent across `generateStaticParams`, detail
- * pages, and the API routes.
+ * We cache the result at module scope so the dataset is only fetched once per
+ * server process and stays the same across static params, detail pages, and the
+ * API routes.
  */
 
-// A handful of well-known, reliable public HLS test streams. Each title points
-// at one of these so the player always has something real to play.
+// Some public HLS test streams. Each title points at one of these so the player
+// always has something real to play.
 const STREAMS = {
   bunny: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
   tears: "https://test-streams.mux.dev/tos_ismc/main.m3u8",
@@ -26,7 +26,7 @@ const STREAMS = {
   shift: "https://test-streams.mux.dev/pts_shift/master.m3u8",
 } as const;
 
-/** Builder: fills in derived artwork/stream URLs so each entry stays compact. */
+/** Builder type that fills in the artwork and stream URLs so each entry stays short. */
 type Seed = Omit<Title, "posterUrl" | "backdropUrl" | "streamUrl"> & { stream: keyof typeof STREAMS };
 
 function build({ stream, ...rest }: Seed): Title {
@@ -77,7 +77,7 @@ const FALLBACK_CATALOG: Title[] = [
   build({ id: "quantum-detectives", name: "Quantum Detectives", type: series, category: "Sci-Fi", genres: ["Sci-Fi", "Mystery"], year: 2023, rating: 8.0, maturity: "TV-14", durationMinutes: 46, synopsis: "Two investigators solve crimes that haven't fully happened yet, in a city where every choice splits the world.", cast: ["Inspector Vega", "Dr. Lune"], stream: "tears" }),
 ];
 
-/** Memoised dataset promise — see the file header. */
+/** Cache the dataset promise so we only build it once. See the file header. */
 let catalogPromise: Promise<Title[]> | null = null;
 
 async function buildCatalog(): Promise<Title[]> {

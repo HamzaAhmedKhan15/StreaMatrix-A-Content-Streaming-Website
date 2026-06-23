@@ -9,15 +9,15 @@ import type { MessageKey } from "@/lib/i18n/dictionaries";
 import { ChevronDownIcon, CloseIcon, FilterIcon } from "@/components/ui/icons";
 
 /**
- * Header filter bar. Three dropdowns — Category (movie/series/animated), Genre
- * and Year — that all write to the URL query string, so they stack: choosing
- * `genre=Action` + `year=2025` narrows the home grid to titles matching both.
+ * Header filter bar. Three dropdowns (Category, Genre and Year) that all write
+ * to the URL query string, so they stack. Picking `genre=Action` + `year=2025`
+ * narrows the home grid to titles matching both.
  *
- * The URL is the single source of truth (matching `HeaderSearch`): each select
- * reads its value from `useSearchParams` and a change pushes a merged query, so
- * the Back button, the server page and `SearchResults` all stay in sync. Years
- * are pulled from `/api/titles/facets` so only years that actually have content
- * are offered; genres are the fixed, translatable catalog set.
+ * The URL is the source of truth (same as `HeaderSearch`). Each select reads its
+ * value from `useSearchParams` and a change pushes a merged query, so the Back
+ * button, the server page and `SearchResults` all stay in sync. Years come from
+ * `/api/titles/facets` so we only offer years that have content. Genres are the
+ * fixed, translatable catalog set.
  */
 export function FilterBar() {
   const router = useRouter();
@@ -31,21 +31,21 @@ export function FilterBar() {
   const genre = params.get("genre") ?? "";
   const year = params.get("year") ?? "";
 
-  // The Category dropdown is a view over the existing `type`/`category` params:
-  // movies/series map to `type`, while "animated" is the Animation category.
+  // The Category dropdown is just a view over the `type`/`category` params.
+  // movies/series map to `type`, and "animated" is the Animation category.
   const categoryValue =
     type === "movie" ? "movie" : type === "series" ? "series" : category === "Animation" ? "animated" : "";
 
   const hasFilters = Boolean(type || category || genre || year);
 
-  // Load the set of years present in the catalog for the Year dropdown.
+  // Load the years that exist in the catalog for the Year dropdown.
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/titles/facets", { signal: controller.signal })
       .then((res) => res.json())
       .then((data: { years?: number[] }) => setYears(data.years ?? []))
       .catch(() => {
-        /* Leave the Year dropdown empty if facets can't be loaded. */
+        /* If facets fail to load, just leave the Year dropdown empty. */
       });
     return () => controller.abort();
   }, []);
@@ -83,9 +83,9 @@ export function FilterBar() {
 
   return (
     <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
-      {/* Sliders icon, always shown to the left of the label. On phones it
-          stands alone (label hidden); from sm up the text sits beside it.
-          Decorative — each select carries its own aria-label. */}
+      {/* Sliders icon, always to the left of the label. On phones it stands
+          alone (label hidden); from sm up the text sits beside it. It's
+          decorative, each select has its own aria-label. */}
       <FilterIcon className="size-5 shrink-0 text-muted" />
       <span className="hidden shrink-0 text-sm font-medium text-muted sm:inline">
         {t("filter.by")}
@@ -149,9 +149,9 @@ function FilterSelect({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className={cn(
-          // Full-width on phones (selects share the row); natural width from sm up.
+          // Full-width on phones (selects share the row), natural width from sm up.
           "h-9 w-full cursor-pointer appearance-none truncate rounded-lg surface-card ps-3 pe-8 text-sm text-foreground outline-none transition-colors hover:border-brand/60 focus-visible:border-brand sm:w-auto",
-          // A set filter reads as active via the brand tint.
+          // A set filter looks active thanks to the brand tint.
           value ? "border-brand/60 text-foreground" : "text-muted",
         )}
       >

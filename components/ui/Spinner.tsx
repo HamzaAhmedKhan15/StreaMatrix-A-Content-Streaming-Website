@@ -1,8 +1,8 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Custom loading spinner: a rotating brand-gradient ring (see `.loader-ring` in
- * globals.css). Default size is `size-8`; override via `className`.
+ * Loading spinner: a spinning gradient ring (see `.loader-ring` in globals.css).
+ * Default size is `size-8`, override with `className`.
  */
 export function Spinner({ className }: { className?: string }) {
   return (

@@ -1,10 +1,10 @@
 import type { CatalogQuery, SortOption, Title } from "./types";
 
 /**
- * Pure catalog logic — no data, no I/O, no framework.
+ * Pure catalog logic. No data, no I/O, no framework.
  *
- * Living in its own file means this exact logic is reused in three places with
- * zero duplication:
+ * Keeping it in its own file lets the same logic get reused in three places
+ * without copy-paste:
  *   1. the server `catalogService` (over the mock dataset),
  *   2. the client browser component (instant in-memory filtering), and
  *   3. the unit tests.
@@ -29,9 +29,9 @@ export function sortTitles(titles: Title[], sort: SortOption = "trending"): Titl
 }
 
 /**
- * Filter titles by free-text search, category, type, genre and year, then sort
- * the result. Every supplied criterion must match (logical AND), so the filter
- * bar can stack e.g. genre + year to narrow the catalog down progressively.
+ * Filter titles by search text, category, type, genre and year, then sort the
+ * result. Every criterion you pass must match (AND), so the filter bar can stack
+ * things like genre + year to narrow the catalog down.
  */
 export function filterTitles(titles: Title[], query: CatalogQuery = {}): Title[] {
   const search = query.search?.trim().toLowerCase() ?? "";

@@ -1,3 +1,5 @@
+/** @format */
+
 import { catalogService, type MediaType, type SortOption } from "@/services/catalog";
 
 const VALID_SORTS: SortOption[] = ["trending", "rating", "year", "name"];
@@ -5,11 +7,7 @@ const VALID_TYPES: MediaType[] = ["movie", "series"];
 
 /**
  * GET /api/titles?search=&category=&type=&genre=&year=&sort=
- *
- * The catalog service exposed as a small REST endpoint. Server Components call
- * the service directly (faster, no self-fetch), but publishing it as HTTP keeps
- * the data layer genuinely decoupled: a client widget — or a separate
- * service — could consume the exact same boundary.
+
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

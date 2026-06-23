@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-// `import type` is erased at build time, so importing hls.js here is SSR-safe;
-// the actual library is only ever loaded inside the effect, on the client.
+// `import type` is removed at build time, so this is safe on the server. The
+// real hls.js only loads inside the effect, on the client.
 import type HlsInstance from "hls.js";
 import { Spinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
@@ -33,9 +33,9 @@ interface VideoPlayerProps {
 /**
  * Reusable HLS video player.
  *
- * Strategy: prefer the browser's native HLS support (Safari/iOS) so those users
- * never download hls.js; otherwise lazy-load hls.js (Chrome, Firefox, Edge).
- * Loading, error and retry states are handled here so callers just pass a `src`.
+ * Uses native HLS when the browser has it (Safari/iOS) so those users never
+ * download hls.js. Everywhere else (Chrome, Firefox, Edge) it lazy-loads hls.js.
+ * Loading, error and retry states live here, so callers just pass a `src`.
  */
 export function VideoPlayer({
   src,
@@ -51,8 +51,8 @@ export function VideoPlayer({
   const [attempt, setAttempt] = useState(0);
   const { t } = useI18n();
 
-  // Keep the latest callbacks in refs so the playback listeners don't need to
-  // re-subscribe whenever the parent passes new function identities.
+  // Keep the latest callbacks in refs so the playback listeners don't have to
+  // re-subscribe every time the parent passes a new function.
   const onProgressRef = useRef(onProgress);
   const onEndedRef = useRef(onEnded);
   const startRef = useRef(startPositionSec);
@@ -65,8 +65,8 @@ export function VideoPlayer({
   // Load and attach the HLS stream.
   useEffect(() => {
     if (!videoRef.current) return;
-    // Capturing the non-null element in a const keeps it non-null inside the
-    // nested closures below (TS resets guard-narrowing across function bounds).
+    // Grab the element in a const so it stays non-null inside the nested
+    // closures below (TS forgets the null check across function bounds).
     const media = videoRef.current;
 
     setStatus("loading");
@@ -85,7 +85,7 @@ export function VideoPlayer({
     };
 
     async function setup() {
-      // 1. Native HLS (Safari, iOS) — no extra JS needed.
+      // 1. Native HLS (Safari, iOS), no extra JS needed.
       if (media.canPlayType("application/vnd.apple.mpegurl")) {
         media.src = src;
         media.addEventListener("loadedmetadata", handleReady);
@@ -93,7 +93,7 @@ export function VideoPlayer({
         return;
       }
 
-      // 2. Everywhere else — load hls.js on demand.
+      // 2. Everywhere else, load hls.js on demand.
       const { default: Hls } = await import("hls.js");
       if (cancelled) return;
 
@@ -107,7 +107,7 @@ export function VideoPlayer({
       hls.attachMedia(media);
       hls.on(Hls.Events.MANIFEST_PARSED, handleReady);
       hls.on(Hls.Events.ERROR, (_event, data) => {
-        // Only fatal errors are surfaced; hls.js recovers from the rest.
+        // Only show fatal errors. hls.js recovers from the rest.
         if (data.fatal) setStatus("error");
       });
     }

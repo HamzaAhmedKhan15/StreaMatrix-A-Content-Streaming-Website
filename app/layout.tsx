@@ -1,6 +1,8 @@
+/** @format */
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AppShell } from "@/components/layout/AppShell";
+import { MainApp } from "@/components/layout/MainApp";
 import { I18nProvider } from "@/lib/i18n/I18nProvider";
 import { dir } from "@/lib/i18n/config";
 import { getLocale } from "@/lib/i18n/server";
@@ -41,7 +43,7 @@ export default async function RootLayout({
     >
       <body className="antialiased" suppressHydrationWarning>
         <I18nProvider locale={locale}>
-          <AppShell>{children}</AppShell>
+          <MainApp>{children}</MainApp>
         </I18nProvider>
       </body>
     </html>

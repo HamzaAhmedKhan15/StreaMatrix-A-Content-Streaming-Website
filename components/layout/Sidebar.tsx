@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import Link from "next/link";
@@ -63,8 +65,8 @@ function SidebarNav({ onNavigate }: { onNavigate: () => void }) {
           active ? "bg-foreground/10" : "text-muted hover:bg-surface-2 hover:text-foreground",
         )}
       >
-        {/* Active: brand-tinted icon + gradient label (text-gradient makes its
-            own color transparent, so it can't be on the icon's stroke). */}
+        {/* When active: brand-tinted icon and gradient label. text-gradient
+            makes its own color transparent, so it can't go on the icon's stroke. */}
         <Icon className={cn("size-5 shrink-0", active && "text-brand")} />
         <span className={cn(active && "text-gradient")}>{t(labelKey)}</span>
       </Link>
@@ -74,15 +76,11 @@ function SidebarNav({ onNavigate }: { onNavigate: () => void }) {
   return (
     <nav className="space-y-6">
       <div className="space-y-1">
-        <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted/70">
-          {t("nav.browse")}
-        </p>
+        <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted/70">{t("nav.browse")}</p>
         {BROWSE.map(renderLink)}
       </div>
       <div className="space-y-1">
-        <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted/70">
-          {t("nav.genres")}
-        </p>
+        <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted/70">{t("nav.genres")}</p>
         {GENRE_LINKS.map(renderLink)}
       </div>
     </nav>
@@ -91,13 +89,14 @@ function SidebarNav({ onNavigate }: { onNavigate: () => void }) {
 
 /**
  * Navigation sidebar. On desktop it sits in the flow under the header and
- * collapses by width (pushing content). On mobile it slides in as an overlay
- * (no backdrop, so the page stays visible). Toggled by the header hamburger.
+ * collapses by width (pushing the content). On mobile it slides in as an
+ * overlay (no backdrop, so the page stays visible). The header hamburger
+ * toggles it.
  */
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useI18n();
-  // On phones (overlay) selecting a destination closes the drawer; from tablet
-  // up the sidebar is inline and stays open.
+  // On phones (overlay) picking a destination closes the drawer. From tablet up
+  // the sidebar is inline and stays open.
   const handleNavigate = () => {
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
       onClose();
@@ -109,15 +108,12 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
       aria-label={t("nav.menu")}
       aria-hidden={!open}
       className={cn(
-        // Fixed and slides in/out. On phones it overlays the content; from
-        // tablet up the content's margin (see AppShell) makes room beside it.
-        // `top-28` clears the two-row header (search + filter bar) above it.
         "fixed bottom-0 left-0 top-28 z-20 w-64 border-r border-border bg-surface transition-transform duration-300 ease-out",
         open ? "translate-x-0" : "-translate-x-full",
       )}
     >
       <div className="flex h-full w-64 flex-col">
-        {/* Phone-only close affordance (tablet & up use the header hamburger) */}
+        {/* Phone-only close button (tablet and up use the header hamburger) */}
         <div className="flex h-12 items-center justify-between px-4 md:hidden">
           <span className="text-sm font-semibold text-muted">{t("nav.menu")}</span>
           <button
@@ -136,8 +132,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
           </Suspense>
         </div>
 
-        {/* Pinned subscription promo — stays fixed at the bottom of the sidebar,
-            above the page footer, while the nav above it scrolls. */}
+        {/* subscription footer, stay fixed on scroll. */}
         <div className="shrink-0 border-t border-border/60 p-3">
           <div className="space-y-2.5 rounded-xl border border-brand/30 bg-surface-2/60 p-3.5">
             <div className="flex items-center gap-2">

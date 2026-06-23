@@ -22,8 +22,8 @@ interface TrailerPlayerProps {
   onEnded?: () => void;
 }
 
-// Minimal typings for the slice of the YouTube IFrame API we use, so we avoid
-// pulling in @types/youtube for a couple of methods.
+// Just the bits of the YouTube IFrame API we use, so we don't pull in
+// @types/youtube for a couple of methods.
 type YTPlayer = {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   getCurrentTime: () => number;
@@ -81,9 +81,9 @@ function loadYouTubeApi(): Promise<YTNamespace> {
 }
 
 /**
- * Plays a title's trailer via the YouTube IFrame API. It mirrors VideoPlayer's
- * `onProgress` / `startPositionSec` interface so the Continue-watching store
- * works exactly the same whether the source is a trailer or an HLS stream.
+ * Plays a title's trailer with the YouTube IFrame API. It uses the same
+ * `onProgress` / `startPositionSec` props as VideoPlayer, so the Continue-watching
+ * store works the same whether the source is a trailer or an HLS stream.
  */
 export function TrailerPlayer({
   videoId,
@@ -115,8 +115,8 @@ export function TrailerPlayer({
     let cancelled = false;
     let player: YTPlayer | null = null;
     let interval: number | undefined;
-    // YT replaces its target node with an iframe, so give it a throwaway child
-    // and leave React's own div untouched.
+    // YT swaps its target node for an iframe, so hand it a throwaway child and
+    // leave React's own div alone.
     const host = document.createElement("div");
     wrap.appendChild(host);
 

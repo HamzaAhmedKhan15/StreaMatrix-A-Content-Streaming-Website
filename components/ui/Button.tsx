@@ -5,7 +5,7 @@ export type ButtonVariant = "primary" | "secondary" | "ghost";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  // The signature gradient button, with a soft glow that grows on hover.
+  // The main gradient button. Glow grows a bit on hover.
   primary:
     "gradient-brand text-black font-semibold shadow-[0_8px_30px_-12px_rgba(45,200,170,0.7)] hover:shadow-[0_10px_40px_-10px_rgba(45,200,170,0.9)] hover:brightness-110",
   secondary:
@@ -21,9 +21,8 @@ const SIZES: Record<ButtonSize, string> = {
 };
 
 /**
- * Returns the className for a button-styled element. Exported separately so the
- * exact same look can be applied to a Next.js `<Link>` (see `buttonStyles` used
- * across cards and the hero) without duplicating styles.
+ * Returns the className for a button-styled element. Exported on its own so we
+ * can give a Next.js `<Link>` the same look without copying the styles.
  */
 export function buttonStyles(options?: { variant?: ButtonVariant; size?: ButtonSize; className?: string }) {
   const { variant = "primary", size = "md", className } = options ?? {};

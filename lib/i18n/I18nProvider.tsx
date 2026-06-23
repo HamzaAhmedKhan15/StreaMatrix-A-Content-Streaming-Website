@@ -14,16 +14,16 @@ interface I18nValue {
 const I18nContext = createContext<I18nValue | null>(null);
 
 /**
- * Provides the active locale + a `t()` translator to client components. The
- * initial locale comes from the server (cookie), so the first client render
- * matches the server HTML. Switching writes the cookie and calls
- * `router.refresh()` so Server Components re-render in the new language too.
+ * Gives client components the active locale and a `t()` translator. The initial
+ * locale comes from the server cookie, so the first client render matches the
+ * server HTML. Switching writes the cookie and calls `router.refresh()` so the
+ * Server Components re-render in the new language too.
  */
 export function I18nProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
   const router = useRouter();
 
-  // Persist the choice and re-render Server Components in the new language. The
-  // server layout re-reads the cookie and feeds the new `locale` prop back in.
+  // Save the choice, then re-render so the server reads the cookie again and
+  // sends the page back in the new language.
   const setLocale = useCallback(
     (next: Locale) => {
       document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
